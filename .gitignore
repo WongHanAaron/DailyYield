@@ -186,3 +186,6 @@ temp/
 ehthumbs.db
 Thumbs.db
 .vs/*
+/.vs/*
+.dtbcache.v2
+*.vsidx
