@@ -15,6 +15,10 @@ Daily-Yield is a full-stack web application designed to help families track and 
 
 ## Project Conventions
 
+### Project Structure
+- Components are organized as `<component>/<component_solution_files>`
+- For C# projects, follow the structure: `<component>/<solution_file>`, `<component>/src/<source_projects>`, and `<component>/tests/<test_projects>`
+
 ### Code Style
 - C# for backend code; use StyleCop or EditorConfig with project config
 - Use nullable reference types and strict mode in C#

@@ -4,14 +4,14 @@
 - [ ] 1.3 Review with stakeholders for API design alignment
 
 ## 2. Implementation
-- [ ] 2.1 Set up ASP.NET Core Web API project with EF Core integration
-- [ ] 2.2 Define domain ports (interfaces) for repositories and services
-- [ ] 2.3 Implement adapters: EF Core repository adapters for data access
-- [ ] 2.4 Implement CQRS: define command and query classes, handlers for each operation
-- [ ] 2.5 Implement authentication: JWT token generation and validation
-- [ ] 2.6 Create base controller classes with authorization filters
-- [ ] 2.7 Implement UserGroup controllers (CRUD) as primary adapters calling commands/queries
-- [ ] 2.8 Implement User controllers (register, login)
+- [x] 2.1 Set up ASP.NET Core Web API project with EF Core integration
+- [x] 2.2 Define domain ports (interfaces) for repositories and services
+- [x] 2.3 Implement adapters: EF Core repository adapters for data access
+- [x] 2.4 Implement CQRS: define command and query classes, handlers for each operation
+- [x] 2.5 Implement authentication: JWT token generation and validation
+- [x] 2.6 Create base controller classes with authorization filters
+- [x] 2.7 Implement UserGroup controllers (CRUD) as primary adapters calling commands/queries
+- [x] 2.8 Implement User controllers (register, login)
 - [ ] 2.9 Implement MetricType and MetricEntry controllers
 - [ ] 2.10 Implement Task, TaskTimer, TaskCollaborator controllers
 - [ ] 2.11 Implement Goal controllers
