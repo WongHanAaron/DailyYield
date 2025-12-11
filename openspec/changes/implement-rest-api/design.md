@@ -23,6 +23,7 @@ This design outlines the implementation of a REST API for Daily-Yield, providing
 - User group ID in claims for data isolation
 - Implement CQRS pattern: separate command handlers for write operations (e.g., CreateUserGroup, LogMetric) and query handlers for read operations (e.g., GetUserGroups, GetDailySummary)
 - Use Ports and Adapters (Hexagonal Architecture): define ports (interfaces) for domain services and repositories; implement adapters for external concerns like database (EF Core), messaging, and API controllers as primary adapters
+- Containerize the API with Docker: use multi-stage Dockerfile for efficient builds, expose port 8080, and integrate with Docker Compose for local development including Postgres and Redis services
 
 ## API Endpoints Overview
 High-level list of REST API endpoints to be implemented:
@@ -76,5 +77,5 @@ All endpoints will require JWT authentication and enforce user group-based acces
 
 ## Migration Plan
 - New API project alongside existing code
-- Deploy as separate service or monolith initially
-- Front-end updates to consume API endpoints
+- Containerize with Docker for easy deployment and local development
+- Use Docker Compose to orchestrate API, Postgres, and Redis for full stack testing
