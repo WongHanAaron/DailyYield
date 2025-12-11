@@ -35,7 +35,7 @@ Daily-Yield is a full-stack web application designed to help families track and 
 
 ### Git Workflow
 - Use GitHub Flow: feature branches off `main`, open PRs for review
-- Branch naming: `feat/<short-desc>`, `fix/<short-desc>`, `chore/<short-desc>`
+- Branch naming: `proposal/<short-desc>` `feat/<short-desc>`, `fix/<short-desc>`, `chore/<short-desc>`
 - Use Draft PRs for WIP; require at least one approval for merging to `main`
 - CI must pass (lint, tests) before merging; use squash merges and ensure meaningful commit messages
 
