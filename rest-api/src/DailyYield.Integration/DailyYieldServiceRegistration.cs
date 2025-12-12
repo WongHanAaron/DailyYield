@@ -58,6 +58,7 @@ public static class DailyYieldServiceRegistration
         // Register all infrastructure service categories
         services.AddDatabaseServices(configuration);
         services.AddAuthenticationServices(configuration);
+        services.AddCorsServices();
 
         return services;
     }
@@ -121,6 +122,26 @@ public static class DailyYieldServiceRegistration
         });
 
         services.AddAuthorization();
+
+        return services;
+    }
+
+    /// <summary>
+    /// Registers CORS services
+    /// </summary>
+    /// <param name="services">The service collection to add services to</param>
+    /// <returns>The service collection with CORS services registered</returns>
+    public static IServiceCollection AddCorsServices(this IServiceCollection services)
+    {
+        services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            });
+        });
 
         return services;
     }

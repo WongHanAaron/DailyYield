@@ -2,6 +2,7 @@ using DailyYield.Application.Commands;
 using DailyYield.Domain.Entities;
 using DailyYield.Domain.Ports;
 using MediatR;
+using Serilog;
 
 namespace DailyYield.Application.Handlers;
 
@@ -20,23 +21,35 @@ public class CreateUserGroupCommandHandler : IRequestHandler<CreateUserGroupComm
 
     public async Task<Guid> Handle(CreateUserGroupCommand request, CancellationToken cancellationToken)
     {
-        var userGroup = new UserGroup
+        try
         {
-            Name = request.Name,
-            Timezone = request.Timezone
-        };
+            Log.Information("Creating user group with name: {Name} for owner: {OwnerId}", request.Name, request.OwnerId);
 
-        await _userGroupRepository.AddAsync(userGroup);
+            var userGroup = new UserGroup
+            {
+                Name = request.Name,
+                Timezone = request.Timezone
+            };
 
-        var member = new UserGroupMember
+            await _userGroupRepository.AddAsync(userGroup);
+
+            var member = new UserGroupMember
+            {
+                UserId = request.OwnerId,
+                UserGroupId = userGroup.Id,
+                Role = "owner"
+            };
+
+            await _memberRepository.AddAsync(member);
+
+            Log.Information("Successfully created user group {UserGroupId} with owner {OwnerId}", userGroup.Id, request.OwnerId);
+
+            return userGroup.Id;
+        }
+        catch (Exception ex)
         {
-            UserId = request.OwnerId,
-            UserGroupId = userGroup.Id,
-            Role = "owner"
-        };
-
-        await _memberRepository.AddAsync(member);
-
-        return userGroup.Id;
+            Log.Error(ex, "Failed to create user group with name: {Name} for owner: {OwnerId}", request.Name, request.OwnerId);
+            throw;
+        }
     }
 }

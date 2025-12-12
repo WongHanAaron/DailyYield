@@ -12,10 +12,10 @@
 - [x] 2.6 Create base controller classes with authorization filters
 - [x] 2.7 Implement UserGroup controllers (CRUD) as primary adapters calling commands/queries
 - [x] 2.8 Implement User controllers (register, login)
-- [ ] 2.9 Implement MetricType and MetricEntry controllers
-- [ ] 2.10 Implement Task, TaskTimer, TaskCollaborator controllers
-- [ ] 2.11 Implement Goal controllers
-- [ ] 2.12 Implement Reminder controllers
+- [x] 2.9 Implement MetricType and MetricEntry controllers
+- [x] 2.10 Implement Task, TaskTimer, TaskCollaborator controllers
+- [x] 2.11 Implement Goal controllers
+- [x] 2.12 Implement Reminder controllers
 - [ ] 2.13 Implement YieldSummary read controllers
 - [ ] 2.14 Add input validation, error handling, and logging
 - [ ] 2.15 Configure CORS and basic rate limiting

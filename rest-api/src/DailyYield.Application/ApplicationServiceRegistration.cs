@@ -1,6 +1,7 @@
 using DailyYield.Application.Commands;
 using DailyYield.Application.Queries;
 using AutoMapper;
+using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -24,8 +25,8 @@ public static class ApplicationServiceRegistration
             cfg.RegisterServicesFromAssembly(typeof(ApplicationServiceRegistration).Assembly);
         });
 
-        // Register AutoMapper
-        services.AddAutoMapper(typeof(ApplicationServiceRegistration).Assembly);
+        // Register FluentValidation
+        services.AddValidatorsFromAssembly(typeof(ApplicationServiceRegistration).Assembly);
 
         return services;
     }

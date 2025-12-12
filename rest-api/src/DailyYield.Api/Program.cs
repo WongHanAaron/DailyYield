@@ -1,9 +1,12 @@
+using DailyYield.Api.Middleware;
 using DailyYield.Integration;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.Text;
+using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +19,11 @@ builder.Host.UseSerilog((context, config) =>
 // Add services to the container.
 builder.Services.AddDailyYieldServices(builder.Configuration);
 
+builder.Services.AddAutoMapper(typeof(DailyYield.Application.ApplicationServiceRegistration).Assembly,
+                              typeof(DailyYield.Api.Controllers.BaseController).Assembly);
+
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddFluentValidationClientsideAdapters();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
@@ -28,6 +36,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseSerilogRequestLogging();
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
+app.UseCors("AllowAll");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();

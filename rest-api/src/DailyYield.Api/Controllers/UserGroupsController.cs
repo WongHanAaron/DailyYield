@@ -2,6 +2,7 @@ using DailyYield.Application.Commands;
 using DailyYield.Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 
 namespace DailyYield.Api.Controllers;
 
@@ -12,10 +13,12 @@ namespace DailyYield.Api.Controllers;
 public class UserGroupsController : BaseController
 {
     private readonly IMediator _mediator;
+    private readonly IMapper _mapper;
 
-    public UserGroupsController(IMediator mediator)
+    public UserGroupsController(IMediator mediator, IMapper mapper)
     {
         _mediator = mediator;
+        _mapper = mapper;
     }
 
     /// <summary>
@@ -41,12 +44,8 @@ public class UserGroupsController : BaseController
     [HttpPost]
     public async Task<IActionResult> CreateUserGroup([FromBody] CreateUserGroupRequest request)
     {
-        var command = new CreateUserGroupCommand
-        {
-            Name = request.Name,
-            Timezone = request.Timezone,
-            OwnerId = GetCurrentUserId()
-        };
+        var command = _mapper.Map<CreateUserGroupCommand>(request);
+        command.OwnerId = GetCurrentUserId();
         var id = await _mediator.Send(command);
         return CreatedAtAction(nameof(GetUserGroups), new { id }, new { Id = id });
     }
