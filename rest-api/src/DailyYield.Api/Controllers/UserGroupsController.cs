@@ -1,11 +1,13 @@
 using DailyYield.Application.Commands;
 using DailyYield.Application.Queries;
-using DailyYield.Api.Controllers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DailyYield.Api.Controllers;
 
+/// <summary>
+/// Controller for managing user groups
+/// </summary>
 [Route("api/usergroups")]
 public class UserGroupsController : BaseController
 {
@@ -16,6 +18,11 @@ public class UserGroupsController : BaseController
         _mediator = mediator;
     }
 
+    /// <summary>
+    /// Gets all user groups for the current user
+    /// </summary>
+    /// <returns>A list of user groups</returns>
+    /// <response code="200">Returns the list of user groups</response>
     [HttpGet]
     public async Task<IActionResult> GetUserGroups()
     {
@@ -24,6 +31,13 @@ public class UserGroupsController : BaseController
         return Ok(result);
     }
 
+    /// <summary>
+    /// Creates a new user group
+    /// </summary>
+    /// <param name="request">The user group creation request</param>
+    /// <returns>The ID of the created user group</returns>
+    /// <response code="201">Returns the ID of the newly created user group</response>
+    /// <response code="400">If the request data is invalid</response>
     [HttpPost]
     public async Task<IActionResult> CreateUserGroup([FromBody] CreateUserGroupRequest request)
     {
@@ -38,8 +52,18 @@ public class UserGroupsController : BaseController
     }
 }
 
+/// <summary>
+/// Request model for creating a user group
+/// </summary>
 public class CreateUserGroupRequest
 {
+    /// <summary>
+    /// The name of the user group
+    /// </summary>
     public string Name { get; set; } = string.Empty;
+
+    /// <summary>
+    /// The timezone of the user group (defaults to UTC)
+    /// </summary>
     public string Timezone { get; set; } = "UTC";
 }

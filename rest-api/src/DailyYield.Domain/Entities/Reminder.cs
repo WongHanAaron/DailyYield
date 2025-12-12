@@ -13,7 +13,8 @@ public class Reminder
     public Task? Task { get; set; }
     public Guid? MetricTypeId { get; set; }
     public MetricType? MetricType { get; set; }
-    public string Schedule { get; set; } = string.Empty; // cron or simple
+    public ReminderScheduleType ScheduleType { get; set; } = ReminderScheduleType.Simple;
+    public string Schedule { get; set; } = string.Empty; // cron expression or simple schedule
     public bool IsActive { get; set; } = true;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

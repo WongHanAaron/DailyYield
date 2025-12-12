@@ -1,12 +1,14 @@
-using DailyYield.Api.Controllers;
 using DailyYield.Domain.Entities;
 using DailyYield.Domain.Ports;
-using DailyYield.Infrastructure.Adapters;
+using DailyYield.Adapter.Database;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DailyYield.Api.Controllers;
 
+/// <summary>
+/// Authentication controller for user login and registration
+/// </summary>
 [AllowAnonymous]
 [Route("api/auth")]
 public class AuthController : ControllerBase
@@ -19,7 +21,13 @@ public class AuthController : ControllerBase
         _authService = authService;
         _userRepository = userRepository;
     }
-
+    /// <summary>
+    /// Registers a new user account
+    /// </summary>
+    /// <param name="request">The user registration details</param>
+    /// <returns>The created user information</returns>
+    /// <response code="201">Returns the newly created user</response>
+    /// <response code="400">If the registration data is invalid</response>
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
@@ -43,7 +51,13 @@ public class AuthController : ControllerBase
         var token = await _authService.GenerateJwtToken(user);
         return Ok(new { Token = token });
     }
-
+    /// <summary>
+    /// Authenticates a user and returns a JWT token
+    /// </summary>
+    /// <param name="request">The login credentials</param>
+    /// <returns>A JWT token if authentication is successful</returns>
+    /// <response code="200">Returns the JWT token</response>
+    /// <response code="401">If the credentials are invalid</response>
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {

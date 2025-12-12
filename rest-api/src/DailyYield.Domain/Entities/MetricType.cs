@@ -5,7 +5,7 @@ public class MetricType
     public Guid Id { get; set; }
     public string Key { get; set; } = string.Empty;
     public string DisplayName { get; set; } = string.Empty;
-    public string Type { get; set; } = "numeric"; // numeric, boolean, categorical
+    public MetricDataType Type { get; set; } = MetricDataType.Numeric;
     public string? Unit { get; set; }
     public Guid UserGroupId { get; set; }
     public UserGroup UserGroup { get; set; } = null!;

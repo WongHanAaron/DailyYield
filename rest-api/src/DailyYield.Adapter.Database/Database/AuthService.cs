@@ -1,5 +1,6 @@
 using DailyYield.Domain.Entities;
 using DailyYield.Domain.Ports;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -7,21 +8,17 @@ using System.Text;
 using BCrypt.Net;
 using System.Linq;
 
-namespace DailyYield.Infrastructure.Adapters;
+namespace DailyYield.Adapter.Database;
 
 public class AuthService : IAuthService
 {
     private readonly IRepository<User> _userRepository;
-    private readonly string _secretKey;
-    private readonly string _issuer;
-    private readonly string _audience;
+    private readonly AuthenticationOptions _options;
 
-    public AuthService(IRepository<User> userRepository, string secretKey, string issuer, string audience)
+    public AuthService(IRepository<User> userRepository, IOptions<AuthenticationOptions> options)
     {
         _userRepository = userRepository;
-        _secretKey = secretKey;
-        _issuer = issuer;
-        _audience = audience;
+        _options = options.Value ?? throw new ArgumentNullException(nameof(options));
     }
 
     public async Task<string> GenerateJwtToken(User user)
@@ -34,14 +31,14 @@ public class AuthService : IAuthService
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secretKey));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
-            issuer: _issuer,
-            audience: _audience,
+            issuer: _options.Issuer,
+            audience: _options.Audience,
             claims: claims,
-            expires: DateTime.Now.AddHours(1),
+            expires: DateTime.Now.AddHours(_options.ExpirationHours),
             signingCredentials: creds);
 
         return new JwtSecurityTokenHandler().WriteToken(token);

@@ -2,7 +2,7 @@ using DailyYield.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using TaskEntity = DailyYield.Domain.Entities.Task;
 
-namespace DailyYield.Infrastructure.Adapters;
+namespace DailyYield.Adapter.Database;
 
 public class DailyYieldDbContext : DbContext
 {
@@ -55,7 +55,7 @@ public class DailyYieldDbContext : DbContext
             entity.HasIndex(e => new { e.Key, e.UserGroupId }).IsUnique();
             entity.Property(e => e.Key).IsRequired().HasMaxLength(50);
             entity.Property(e => e.DisplayName).IsRequired().HasMaxLength(100);
-            entity.Property(e => e.Type).IsRequired().HasMaxLength(20);
+            entity.Property(e => e.Type).HasConversion<string>().IsRequired().HasMaxLength(20);
             entity.Property(e => e.Unit).HasMaxLength(20);
             entity.HasOne(e => e.UserGroup).WithMany().HasForeignKey(e => e.UserGroupId);
         });
@@ -94,10 +94,10 @@ public class DailyYieldDbContext : DbContext
         modelBuilder.Entity<Goal>(entity =>
         {
             entity.HasKey(e => e.Id);
-            entity.Property(e => e.Timeframe).IsRequired().HasMaxLength(20);
-            entity.Property(e => e.GoalType).IsRequired().HasMaxLength(20);
+            entity.Property(e => e.Timeframe).HasConversion<string>().IsRequired().HasMaxLength(20);
+            entity.Property(e => e.GoalType).HasConversion<string>().IsRequired().HasMaxLength(20);
             entity.Property(e => e.Frequency).HasMaxLength(50);
-            entity.Property(e => e.Comparison).IsRequired().HasMaxLength(20);
+            entity.Property(e => e.Comparison).HasConversion<string>().IsRequired().HasMaxLength(20);
             entity.HasOne(e => e.MetricType).WithMany(mt => mt.Goals).HasForeignKey(e => e.MetricTypeId);
             entity.HasOne(e => e.User).WithMany(u => u.Goals).HasForeignKey(e => e.UserId);
             entity.HasOne(e => e.UserGroup).WithMany().HasForeignKey(e => e.UserGroupId);
@@ -108,6 +108,7 @@ public class DailyYieldDbContext : DbContext
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Title).IsRequired().HasMaxLength(200);
             entity.Property(e => e.Description).HasMaxLength(500);
+            entity.Property(e => e.ScheduleType).HasConversion<string>().IsRequired().HasMaxLength(20);
             entity.Property(e => e.Schedule).IsRequired().HasMaxLength(100);
             entity.HasOne(e => e.User).WithMany(u => u.Reminders).HasForeignKey(e => e.UserId);
             entity.HasOne(e => e.UserGroup).WithMany().HasForeignKey(e => e.UserGroupId);

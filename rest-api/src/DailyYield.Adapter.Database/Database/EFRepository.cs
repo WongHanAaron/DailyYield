@@ -1,7 +1,7 @@
 using DailyYield.Domain.Ports;
 using Microsoft.EntityFrameworkCore;
 
-namespace DailyYield.Infrastructure.Adapters;
+namespace DailyYield.Adapter.Database;
 
 public class EFRepository<T> : IRepository<T> where T : class
 {

@@ -10,9 +10,9 @@ public class Goal
     public Guid? UserGroupId { get; set; }
     public UserGroup? UserGroup { get; set; }
     public decimal TargetValue { get; set; }
-    public string Timeframe { get; set; } = "daily"; // daily, weekly, monthly
-    public string GoalType { get; set; } = "one-time"; // one-time, recurring
+    public GoalTimeframe Timeframe { get; set; } = GoalTimeframe.Daily;
+    public GoalType GoalType { get; set; } = GoalType.OneTime;
     public string? Frequency { get; set; } // for recurring
-    public string Comparison { get; set; } = "at-least"; // at-least, at-most
+    public GoalComparison Comparison { get; set; } = GoalComparison.AtLeast;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

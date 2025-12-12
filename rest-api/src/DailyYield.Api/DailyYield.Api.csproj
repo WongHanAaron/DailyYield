@@ -4,6 +4,8 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,7 +26,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DailyYield.Application\DailyYield.Application.csproj" />
-    <ProjectReference Include="..\DailyYield.Infrastructure\DailyYield.Infrastructure.csproj" />
+    <ProjectReference Include="..\DailyYield.Adapter.Database\DailyYield.Adapter.Database.csproj" />
+    <ProjectReference Include="..\DailyYield.Integration\DailyYield.Integration.csproj" />
   </ItemGroup>
 
 </Project>
