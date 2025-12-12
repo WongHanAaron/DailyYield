@@ -37,6 +37,11 @@ Daily-Yield is a full-stack web application designed to help families track and 
 - End-to-end smoke tests: basic flow for metric logging → task tracking → report generation (run in CI nightly or on PRs for major changes)
 - Require tests for any new backend logic that affects calculations or persistence
 
+#### Unit Test Rules
+- Do not declare re-used dependencies in the test class
+- Declare all member variables in the test method
+- Call the component under test as 'sut' (System Under Test)
+
 ### Git Workflow
 - Use GitHub Flow: feature branches off `main`, open PRs for review
 - Branch naming: `proposal/<short-desc>` `feat/<short-desc>`, `fix/<short-desc>`, `chore/<short-desc>`

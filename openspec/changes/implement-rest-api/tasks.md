@@ -21,9 +21,9 @@
 - [x] 2.15 Configure CORS and basic rate limiting
 
 ## 3. Validation
-- [ ] 3.1 Write unit tests for command and query handlers
-- [ ] 3.2 Write unit tests for repository adapters and ports
-- [ ] 3.3 Write unit tests for controllers and services
+- [x] 3.1 Write unit tests for command and query handlers
+- [x] 3.2 Write unit tests for repository adapters and ports
+- [x] 3.3 Write unit tests for controllers and services
 - [ ] 3.4 Run integration tests against test database
 - [ ] 3.5 Test authentication and authorization flows
 - [ ] 3.6 Validate API responses match spec scenarios
