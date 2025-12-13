@@ -68,7 +68,7 @@ public class AuthController : ControllerBase
         }
 
         var token = await _authService.GenerateJwtToken(user);
-        return Ok(new { Token = token });
+        return Ok(new AuthResponse { Token = token });
     }
 }
 
@@ -84,4 +84,9 @@ public class LoginRequest
 {
     public string Email { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
+}
+
+public class AuthResponse
+{
+    public string Token { get; set; } = string.Empty;
 }

@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Text;
 
 namespace DailyYield.Integration;
@@ -20,14 +22,16 @@ public static class DailyYieldServiceRegistration
     /// </summary>
     /// <param name="services">The service collection to add services to</param>
     /// <param name="configuration">The application configuration</param>
+    /// <param name="configureDatabaseOptions">Action to configure database options</param>
     /// <returns>The service collection with all services registered</returns>
     public static IServiceCollection AddDailyYieldServices(
         this IServiceCollection services,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        Action<DatabaseOptions>? configureDatabaseOptions = null)
     {
         // Register all service categories
         services.AddApplicationLayerServices();
-        services.AddInfrastructureServices(configuration);
+        services.AddInfrastructureServices(configuration, configureDatabaseOptions);
 
         return services;
     }
@@ -50,13 +54,15 @@ public static class DailyYieldServiceRegistration
     /// </summary>
     /// <param name="services">The service collection to add services to</param>
     /// <param name="configuration">The application configuration</param>
+    /// <param name="configureDatabaseOptions">Action to configure database options</param>
     /// <returns>The service collection with infrastructure services registered</returns>
     public static IServiceCollection AddInfrastructureServices(
         this IServiceCollection services,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        Action<DatabaseOptions>? configureDatabaseOptions = null)
     {
         // Register all infrastructure service categories
-        services.AddDatabaseServices(configuration);
+        services.AddDatabaseServices(configuration, configureDatabaseOptions);
         services.AddAuthenticationServices(configuration);
         services.AddCorsServices();
 
@@ -68,14 +74,36 @@ public static class DailyYieldServiceRegistration
     /// </summary>
     /// <param name="services">The service collection to add services to</param>
     /// <param name="configuration">The application configuration</param>
+    /// <param name="configureOptions">Action to configure database options</param>
     /// <returns>The service collection with database services registered</returns>
     public static IServiceCollection AddDatabaseServices(
         this IServiceCollection services,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        Action<DatabaseOptions>? configureOptions = null)
     {
+        // Create default database options
+        var databaseOptions = new DatabaseOptions
+        {
+            Provider = DatabaseProvider.PostgreSQL, // Default to PostgreSQL
+            ConnectionString = configuration.GetConnectionString("DefaultConnection")
+        };
+
+        // Apply configuration action if provided
+        configureOptions?.Invoke(databaseOptions);
+
         // Database context
         services.AddDbContext<DailyYieldDbContext>(options =>
-            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+        {
+            if (databaseOptions.Provider == DatabaseProvider.InMemory)
+            {
+                options.UseInMemoryDatabase("TestDb");
+            }
+            else
+            {
+                var connectionString = databaseOptions.ConnectionString ?? configuration.GetConnectionString("DefaultConnection");
+                options.UseNpgsql(connectionString);
+            }
+        });
 
         // Repositories
         services.AddScoped(typeof(IRepository<>), typeof(EFRepository<>));
