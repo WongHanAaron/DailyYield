@@ -53,11 +53,14 @@ public class GetGoalQueryHandler : IRequestHandler<GetGoalQuery, GoalDto>
             UserId = goal.UserId,
             UserGroupId = goal.UserGroupId,
             TargetValue = goal.TargetValue,
-            Timeframe = goal.Timeframe,
+            TimeframeStart = goal.TimeframeStart,
+            TimeframeEnd = goal.TimeframeEnd,
             GoalType = goal.GoalType,
             Frequency = goal.Frequency,
             Comparison = goal.Comparison,
-            CreatedAt = goal.CreatedAt
+            Status = goal.Status,
+            CreatedAt = goal.CreatedAt,
+            UpdatedAt = goal.UpdatedAt
         };
     }
 }

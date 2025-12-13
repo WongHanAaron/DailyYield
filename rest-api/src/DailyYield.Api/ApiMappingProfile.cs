@@ -22,11 +22,11 @@ public class ApiMappingProfile : Profile
 
         // Task mappings
         CreateMap<CreateTaskRequest, CreateTaskCommand>()
-            .ForMember(dest => dest.UserId, opt => opt.Ignore()); // Set in controller
+            .ForMember(dest => dest.OwnerId, opt => opt.Ignore()); // Set in controller
 
         CreateMap<UpdateTaskRequest, UpdateTaskCommand>()
             .ForMember(dest => dest.Id, opt => opt.Ignore()) // Set in controller
-            .ForMember(dest => dest.UserId, opt => opt.Ignore()); // Set in controller
+            .ForMember(dest => dest.OwnerId, opt => opt.Ignore()); // Set in controller
 
         // Goal mappings
         CreateMap<CreateGoalRequest, CreateGoalCommand>()

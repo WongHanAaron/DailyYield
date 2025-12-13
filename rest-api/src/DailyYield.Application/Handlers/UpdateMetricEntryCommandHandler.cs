@@ -28,11 +28,14 @@ public class UpdateMetricEntryCommandHandler : IRequestHandler<UpdateMetricEntry
             throw new UnauthorizedAccessException("User does not own this metric entry");
         }
 
+        metricEntry.Type = request.Type;
         metricEntry.NumericValue = request.NumericValue;
         metricEntry.BooleanValue = request.BooleanValue;
         metricEntry.CategoryValue = request.CategoryValue;
+        metricEntry.StartedAt = request.StartedAt;
+        metricEntry.EndedAt = request.EndedAt;
         metricEntry.Timestamp = request.Timestamp ?? metricEntry.Timestamp;
-        metricEntry.Notes = request.Notes;
+        metricEntry.Metadata = request.Metadata;
 
         await _metricEntryRepository.UpdateAsync(metricEntry);
     }

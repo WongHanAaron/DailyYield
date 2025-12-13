@@ -3,15 +3,14 @@ namespace DailyYield.Domain.Entities;
 public class Task
 {
     public Guid Id { get; set; }
+    public Guid OwnerId { get; set; }
+    public User Owner { get; set; } = null!;
+    public Guid? CategoryId { get; set; }
+    public Category? Category { get; set; }
     public string Title { get; set; } = string.Empty;
-    public string? Description { get; set; }
-    public Guid UserId { get; set; }
-    public User User { get; set; } = null!;
-    public Guid? UserGroupId { get; set; }
-    public UserGroup? UserGroup { get; set; }
-    public bool IsCompleted { get; set; } = false;
+    public TaskStatus Status { get; set; } = TaskStatus.Pending;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime? DueDate { get; set; }
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     public ICollection<TaskCollaborator> Collaborators { get; set; } = new List<TaskCollaborator>();
     public ICollection<TaskTimer> Timers { get; set; } = new List<TaskTimer>();
     public ICollection<Reminder> Reminders { get; set; } = new List<Reminder>();

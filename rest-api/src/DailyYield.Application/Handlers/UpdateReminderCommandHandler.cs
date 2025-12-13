@@ -30,11 +30,10 @@ public class UpdateReminderCommandHandler : IRequestHandler<UpdateReminderComman
 
         reminder.Title = request.Title;
         reminder.Description = request.Description;
-        reminder.TaskId = request.TaskId;
-        reminder.MetricTypeId = request.MetricTypeId;
-        reminder.ScheduleType = request.ScheduleType;
-        reminder.Schedule = request.Schedule;
-        reminder.IsActive = request.IsActive;
+        reminder.ScheduledAt = request.ScheduledAt;
+        reminder.IsRecurring = request.IsRecurring;
+        reminder.RecurrencePattern = request.RecurrencePattern;
+        reminder.Status = request.Status;
 
         await _reminderRepository.UpdateAsync(reminder);
     }

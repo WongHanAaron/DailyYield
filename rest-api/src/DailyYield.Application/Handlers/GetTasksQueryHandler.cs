@@ -22,30 +22,25 @@ public class GetTasksQueryHandler : IRequestHandler<GetTasksQuery, IEnumerable<T
     public async Task<IEnumerable<TaskDto>> Handle(GetTasksQuery request, CancellationToken cancellationToken)
     {
         var tasks = await _taskRepository.GetAllAsync();
-        var userTasks = tasks.Where(t => t.UserId == request.UserId);
+        
+        // Include tasks where user is owner or collaborator
+        var userTasks = tasks.Where(t => t.OwnerId == request.UserId || 
+                                        t.Collaborators.Any(c => c.UserId == request.UserId));
 
-        // Also include tasks from user groups the user is member of
-        var memberships = await _memberRepository.GetAllAsync();
-        var userGroupIds = memberships.Where(m => m.UserId == request.UserId).Select(m => m.UserGroupId).ToList();
-        var groupTasks = tasks.Where(t => t.UserGroupId.HasValue && userGroupIds.Contains(t.UserGroupId.Value));
-
-        var allTasks = userTasks.Concat(groupTasks);
-
-        if (request.IsCompleted.HasValue)
+        if (request.Status.HasValue)
         {
-            allTasks = allTasks.Where(t => t.IsCompleted == request.IsCompleted.Value);
+            userTasks = userTasks.Where(t => t.Status == request.Status.Value);
         }
 
-        return allTasks.Select(t => new TaskDto
+        return userTasks.Select(t => new TaskDto
         {
             Id = t.Id,
             Title = t.Title,
-            Description = t.Description,
-            UserId = t.UserId,
-            UserGroupId = t.UserGroupId,
-            IsCompleted = t.IsCompleted,
+            OwnerId = t.OwnerId,
+            CategoryId = t.CategoryId,
+            Status = t.Status,
             CreatedAt = t.CreatedAt,
-            DueDate = t.DueDate
+            UpdatedAt = t.UpdatedAt
         });
     }
 }

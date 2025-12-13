@@ -20,10 +20,8 @@ public class CreateTaskCommandHandler : IRequestHandler<CreateTaskCommand, Guid>
         var task = new TaskEntity
         {
             Title = request.Title,
-            Description = request.Description,
-            UserId = request.UserId,
-            UserGroupId = request.UserGroupId,
-            DueDate = request.DueDate
+            OwnerId = request.OwnerId,
+            CategoryId = request.CategoryId
         };
 
         await _taskRepository.AddAsync(task);

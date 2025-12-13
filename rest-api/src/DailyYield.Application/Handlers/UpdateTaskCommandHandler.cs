@@ -24,14 +24,13 @@ public class UpdateTaskCommandHandler : IRequestHandler<UpdateTaskCommand>
             throw new KeyNotFoundException("Task not found");
         }
 
-        if (task.UserId != request.UserId)
+        if (task.OwnerId != request.OwnerId)
         {
             throw new UnauthorizedAccessException("User does not own this task");
         }
 
         task.Title = request.Title;
-        task.Description = request.Description;
-        task.DueDate = request.DueDate;
+        task.Status = request.Status;
 
         await _taskRepository.UpdateAsync(task);
     }

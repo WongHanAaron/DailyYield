@@ -38,11 +38,6 @@ public class GetGoalsQueryHandler : IRequestHandler<GetGoalsQuery, IEnumerable<G
             allGoals = allGoals.Where(g => g.MetricTypeId == request.MetricTypeId.Value);
         }
 
-        if (request.Timeframe.HasValue)
-        {
-            allGoals = allGoals.Where(g => g.Timeframe == request.Timeframe.Value);
-        }
-
         var metricTypes = await _metricTypeRepository.GetAllAsync();
         var metricTypeDict = metricTypes.ToDictionary(mt => mt.Id, mt => (mt.Key, mt.DisplayName));
 
@@ -55,11 +50,14 @@ public class GetGoalsQueryHandler : IRequestHandler<GetGoalsQuery, IEnumerable<G
             UserId = g.UserId,
             UserGroupId = g.UserGroupId,
             TargetValue = g.TargetValue,
-            Timeframe = g.Timeframe,
+            TimeframeStart = g.TimeframeStart,
+            TimeframeEnd = g.TimeframeEnd,
             GoalType = g.GoalType,
             Frequency = g.Frequency,
             Comparison = g.Comparison,
-            CreatedAt = g.CreatedAt
+            Status = g.Status,
+            CreatedAt = g.CreatedAt,
+            UpdatedAt = g.UpdatedAt
         });
     }
 }

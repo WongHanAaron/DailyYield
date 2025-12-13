@@ -28,7 +28,7 @@ public class AddTaskCollaboratorCommandHandler : IRequestHandler<AddTaskCollabor
             throw new KeyNotFoundException("Task not found");
         }
 
-        if (task.UserId != request.OwnerUserId)
+        if (task.OwnerId != request.OwnerUserId)
         {
             throw new UnauthorizedAccessException("User does not own this task");
         }

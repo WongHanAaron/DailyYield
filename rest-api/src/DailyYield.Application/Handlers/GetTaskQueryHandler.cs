@@ -27,12 +27,11 @@ public class GetTaskQueryHandler : IRequestHandler<GetTaskQuery, TaskDto>
             throw new KeyNotFoundException("Task not found");
         }
 
-        // Check access
-        var hasAccess = task.UserId == request.UserId;
-        if (!hasAccess && task.UserGroupId.HasValue)
+        // Check access - user must be owner or collaborator
+        var hasAccess = task.OwnerId == request.UserId;
+        if (!hasAccess)
         {
-            var memberships = await _memberRepository.GetAllAsync();
-            hasAccess = memberships.Any(m => m.UserId == request.UserId && m.UserGroupId == task.UserGroupId.Value);
+            hasAccess = task.Collaborators.Any(c => c.UserId == request.UserId);
         }
 
         if (!hasAccess)
@@ -44,12 +43,11 @@ public class GetTaskQueryHandler : IRequestHandler<GetTaskQuery, TaskDto>
         {
             Id = task.Id,
             Title = task.Title,
-            Description = task.Description,
-            UserId = task.UserId,
-            UserGroupId = task.UserGroupId,
-            IsCompleted = task.IsCompleted,
+            OwnerId = task.OwnerId,
+            CategoryId = task.CategoryId,
+            Status = task.Status,
             CreatedAt = task.CreatedAt,
-            DueDate = task.DueDate
+            UpdatedAt = task.UpdatedAt
         };
     }
 }

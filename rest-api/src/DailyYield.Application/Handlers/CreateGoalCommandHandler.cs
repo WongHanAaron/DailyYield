@@ -22,7 +22,8 @@ public class CreateGoalCommandHandler : IRequestHandler<CreateGoalCommand, Guid>
             UserId = request.UserId,
             UserGroupId = request.UserGroupId,
             TargetValue = request.TargetValue,
-            Timeframe = request.Timeframe,
+            TimeframeStart = request.TimeframeStart,
+            TimeframeEnd = request.TimeframeEnd,
             GoalType = request.GoalType,
             Frequency = request.Frequency,
             Comparison = request.Comparison

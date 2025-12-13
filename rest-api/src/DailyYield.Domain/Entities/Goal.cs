@@ -9,10 +9,13 @@ public class Goal
     public User? User { get; set; }
     public Guid? UserGroupId { get; set; }
     public UserGroup? UserGroup { get; set; }
-    public decimal TargetValue { get; set; }
-    public GoalTimeframe Timeframe { get; set; } = GoalTimeframe.Daily;
     public GoalType GoalType { get; set; } = GoalType.OneTime;
-    public string? Frequency { get; set; } // for recurring
     public GoalComparison Comparison { get; set; } = GoalComparison.AtLeast;
+    public string TargetValue { get; set; } = string.Empty; // Target as string, matching metric type
+    public string? Frequency { get; set; } // daily, weekly, monthly (required for recurring)
+    public DateTime? TimeframeStart { get; set; } // Optional start date
+    public DateTime? TimeframeEnd { get; set; } // Optional end date
+    public GoalStatus Status { get; set; } = GoalStatus.Active;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 }

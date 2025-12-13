@@ -1,7 +1,7 @@
 ## 1. Design & Spec
 - [x] 1.1 Finalize `design.md` with API architecture decisions
 - [x] 1.2 Complete spec deltas for `api` capability
-- [ ] 1.3 Review with stakeholders for API design alignment
+- [x] 1.3 Review with stakeholders for API design alignment
 
 ## 2. Implementation
 - [x] 2.1 Set up ASP.NET Core Web API project with EF Core integration
@@ -25,11 +25,11 @@
 - [x] 3.2 Write unit tests for repository adapters and ports
 - [x] 3.3 Write unit tests for controllers and services
 - [x] 3.4 Run integration tests against test database
-- [ ] 3.5 Test authentication and authorization flows
-- [ ] 3.6 Validate API responses match spec scenarios
-- [ ] 3.7 Ensure data isolation per user group
+- [x] 3.5 Test authentication and authorization flows
+- [x] 3.6 Validate API responses match spec scenarios
+- [x] 3.7 Ensure data isolation per user group
 
 ## 4. Documentation
-- [ ] 4.1 Generate Swagger/OpenAPI docs
-- [ ] 4.2 Update `openspec/specs/` with stable api spec
-- [ ] 4.3 Document API endpoints in README
+- [x] 4.1 Generate Swagger/OpenAPI docs
+- [x] 4.2 Update `openspec/specs/` with stable api spec
+- [x] 4.3 Document API endpoints in README

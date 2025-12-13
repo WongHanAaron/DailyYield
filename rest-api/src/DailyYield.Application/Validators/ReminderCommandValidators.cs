@@ -19,22 +19,12 @@ public class CreateReminderCommandValidator : AbstractValidator<CreateReminderCo
             .MaximumLength(1000).WithMessage("Description must not exceed 1000 characters")
             .When(x => !string.IsNullOrEmpty(x.Description));
 
-        RuleFor(x => x.TaskId)
-            .NotEmpty().WithMessage("Either Task ID or Metric Type ID must be provided")
-            .When(x => !x.MetricTypeId.HasValue)
-            .WithMessage("Either Task ID or Metric Type ID must be provided");
+        RuleFor(x => x.ScheduledAt)
+            .NotEmpty().WithMessage("Scheduled time is required");
 
-        RuleFor(x => x.MetricTypeId)
-            .NotEmpty().WithMessage("Either Task ID or Metric Type ID must be provided")
-            .When(x => !x.TaskId.HasValue)
-            .WithMessage("Either Task ID or Metric Type ID must be provided");
-
-        RuleFor(x => x.ScheduleType)
-            .IsInEnum().WithMessage("Invalid schedule type");
-
-        RuleFor(x => x.Schedule)
-            .NotEmpty().WithMessage("Schedule is required")
-            .MaximumLength(500).WithMessage("Schedule must not exceed 500 characters");
+        RuleFor(x => x.RecurrencePattern)
+            .MaximumLength(500).WithMessage("Recurrence pattern must not exceed 500 characters")
+            .When(x => !string.IsNullOrEmpty(x.RecurrencePattern));
     }
 }
 
@@ -57,12 +47,12 @@ public class UpdateReminderCommandValidator : AbstractValidator<UpdateReminderCo
             .MaximumLength(1000).WithMessage("Description must not exceed 1000 characters")
             .When(x => !string.IsNullOrEmpty(x.Description));
 
-        RuleFor(x => x.ScheduleType)
-            .IsInEnum().WithMessage("Invalid schedule type");
+        RuleFor(x => x.ScheduledAt)
+            .NotEmpty().WithMessage("Scheduled time is required");
 
-        RuleFor(x => x.Schedule)
-            .NotEmpty().WithMessage("Schedule is required")
-            .MaximumLength(500).WithMessage("Schedule must not exceed 500 characters");
+        RuleFor(x => x.RecurrencePattern)
+            .MaximumLength(500).WithMessage("Recurrence pattern must not exceed 500 characters")
+            .When(x => !string.IsNullOrEmpty(x.RecurrencePattern));
     }
 }
 

@@ -29,10 +29,10 @@ public class RemindersController : BaseController
     /// <param name="isActive">Optional filter by active status</param>
     /// <returns>List of reminders</returns>
     [HttpGet]
-    public async Task<IActionResult> GetReminders([FromQuery] bool? isActive)
+    public async Task<IActionResult> GetReminders([FromQuery] ReminderStatus? status)
     {
         var userId = GetCurrentUserId();
-        var query = new GetRemindersQuery { UserId = userId, IsActive = isActive };
+        var query = new GetRemindersQuery { UserId = userId, Status = status };
         var result = await _mediator.Send(query);
         return Ok(result);
     }

@@ -36,8 +36,7 @@ public class DailyYieldDbContext : DbContext
             entity.HasIndex(e => e.Email).IsUnique();
             entity.Property(e => e.Email).IsRequired().HasMaxLength(255);
             entity.Property(e => e.PasswordHash).IsRequired();
-            entity.Property(e => e.FirstName).IsRequired().HasMaxLength(50);
-            entity.Property(e => e.LastName).IsRequired().HasMaxLength(50);
+            entity.Property(e => e.DisplayName).IsRequired().HasMaxLength(100);
         });
 
         modelBuilder.Entity<UserGroupMember>(entity =>
@@ -63,18 +62,16 @@ public class DailyYieldDbContext : DbContext
         modelBuilder.Entity<MetricEntry>(entity =>
         {
             entity.HasKey(e => e.Id);
-            entity.Property(e => e.Notes).HasMaxLength(500);
+            entity.Property(e => e.Metadata).HasMaxLength(1000);
             entity.HasOne(e => e.User).WithMany(u => u.MetricEntries).HasForeignKey(e => e.UserId);
             entity.HasOne(e => e.MetricType).WithMany(mt => mt.Entries).HasForeignKey(e => e.MetricTypeId);
         });
 
-        modelBuilder.Entity<TaskEntity>(entity =>
+        modelBuilder.Entity<DailyYield.Domain.Entities.Task>(entity =>
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Title).IsRequired().HasMaxLength(200);
-            entity.Property(e => e.Description).HasMaxLength(1000);
-            entity.HasOne(e => e.User).WithMany(u => u.Tasks).HasForeignKey(e => e.UserId);
-            entity.HasOne(e => e.UserGroup).WithMany().HasForeignKey(e => e.UserGroupId);
+            entity.HasOne(e => e.Owner).WithMany(u => u.Tasks).HasForeignKey(e => e.OwnerId);
         });
 
         modelBuilder.Entity<TaskTimer>(entity =>
@@ -94,10 +91,10 @@ public class DailyYieldDbContext : DbContext
         modelBuilder.Entity<Goal>(entity =>
         {
             entity.HasKey(e => e.Id);
-            entity.Property(e => e.Timeframe).HasConversion<string>().IsRequired().HasMaxLength(20);
             entity.Property(e => e.GoalType).HasConversion<string>().IsRequired().HasMaxLength(20);
             entity.Property(e => e.Frequency).HasMaxLength(50);
             entity.Property(e => e.Comparison).HasConversion<string>().IsRequired().HasMaxLength(20);
+            entity.Property(e => e.TargetValue).IsRequired().HasMaxLength(100);
             entity.HasOne(e => e.MetricType).WithMany(mt => mt.Goals).HasForeignKey(e => e.MetricTypeId);
             entity.HasOne(e => e.User).WithMany(u => u.Goals).HasForeignKey(e => e.UserId);
             entity.HasOne(e => e.UserGroup).WithMany().HasForeignKey(e => e.UserGroupId);
@@ -107,22 +104,18 @@ public class DailyYieldDbContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Title).IsRequired().HasMaxLength(200);
-            entity.Property(e => e.Description).HasMaxLength(500);
-            entity.Property(e => e.ScheduleType).HasConversion<string>().IsRequired().HasMaxLength(20);
-            entity.Property(e => e.Schedule).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.Description).HasMaxLength(1000);
+            entity.Property(e => e.RecurrencePattern).HasMaxLength(500);
+            entity.Property(e => e.Status).HasConversion<string>().IsRequired().HasMaxLength(20);
             entity.HasOne(e => e.User).WithMany(u => u.Reminders).HasForeignKey(e => e.UserId);
-            entity.HasOne(e => e.UserGroup).WithMany().HasForeignKey(e => e.UserGroupId);
-            entity.HasOne(e => e.Task).WithMany(t => t.Reminders).HasForeignKey(e => e.TaskId);
-            entity.HasOne(e => e.MetricType).WithMany(mt => mt.Reminders).HasForeignKey(e => e.MetricTypeId);
         });
 
         modelBuilder.Entity<YieldSummary>(entity =>
         {
             entity.HasKey(e => e.Id);
             entity.HasIndex(e => new { e.UserId, e.Date }).IsUnique();
-            entity.Property(e => e.MetricTotalsJson).HasColumnType("jsonb");
+            entity.Property(e => e.SummaryData).HasColumnType("jsonb");
             entity.HasOne(e => e.User).WithMany().HasForeignKey(e => e.UserId);
-            entity.HasOne(e => e.UserGroup).WithMany().HasForeignKey(e => e.UserGroupId);
         });
     }
 }

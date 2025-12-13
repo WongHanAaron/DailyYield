@@ -25,9 +25,9 @@ public class CreateMetricEntryCommandValidator : AbstractValidator<CreateMetricE
             .LessThanOrEqualTo(DateTime.UtcNow).WithMessage("Timestamp cannot be in the future")
             .When(x => x.Timestamp.HasValue);
 
-        RuleFor(x => x.Notes)
-            .MaximumLength(1000).WithMessage("Notes must not exceed 1000 characters")
-            .When(x => !string.IsNullOrEmpty(x.Notes));
+        RuleFor(x => x.Metadata)
+            .MaximumLength(1000).WithMessage("Metadata must not exceed 1000 characters")
+            .When(x => !string.IsNullOrEmpty(x.Metadata));
 
         // At least one value type should be provided
         RuleFor(x => x)
@@ -58,9 +58,9 @@ public class UpdateMetricEntryCommandValidator : AbstractValidator<UpdateMetricE
             .LessThanOrEqualTo(DateTime.UtcNow).WithMessage("Timestamp cannot be in the future")
             .When(x => x.Timestamp.HasValue);
 
-        RuleFor(x => x.Notes)
-            .MaximumLength(1000).WithMessage("Notes must not exceed 1000 characters")
-            .When(x => !string.IsNullOrEmpty(x.Notes));
+        RuleFor(x => x.Metadata)
+            .MaximumLength(1000).WithMessage("Metadata must not exceed 1000 characters")
+            .When(x => !string.IsNullOrEmpty(x.Metadata));
 
         // At least one value type should be provided
         RuleFor(x => x)

@@ -42,11 +42,15 @@ public class GetMetricEntryQueryHandler : IRequestHandler<GetMetricEntryQuery, M
             MetricTypeId = entry.MetricTypeId,
             MetricTypeKey = metricTypeKey,
             MetricTypeDisplayName = metricTypeDisplayName,
+            Type = entry.Type,
             NumericValue = entry.NumericValue,
             BooleanValue = entry.BooleanValue,
             CategoryValue = entry.CategoryValue,
+            StartedAt = entry.StartedAt,
+            EndedAt = entry.EndedAt,
             Timestamp = entry.Timestamp,
-            Notes = entry.Notes
+            Metadata = entry.Metadata,
+            CreatedAt = entry.CreatedAt
         };
     }
 }

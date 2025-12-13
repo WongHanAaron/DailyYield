@@ -28,6 +28,9 @@ public static class ApplicationServiceRegistration
         // Register FluentValidation
         services.AddValidatorsFromAssembly(typeof(ApplicationServiceRegistration).Assembly);
 
+        // Register AutoMapper
+        services.AddAutoMapper(typeof(ApplicationServiceRegistration).Assembly);
+
         return services;
     }
 }

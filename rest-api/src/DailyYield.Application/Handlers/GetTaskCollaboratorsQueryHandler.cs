@@ -30,18 +30,23 @@ public class GetTaskCollaboratorsQueryHandler : IRequestHandler<GetTaskCollabora
             throw new KeyNotFoundException("Task not found");
         }
 
-        // Check access
-        var hasAccess = task.UserId == request.UserId;
-        if (!hasAccess && task.UserGroupId.HasValue)
+        // Check access - user must be owner or collaborator
+        var hasAccess = task.OwnerId == request.UserId;
+        if (!hasAccess)
         {
-            // Assume access if user can see the task
+            hasAccess = task.Collaborators.Any(c => c.UserId == request.UserId);
+        }
+
+        if (!hasAccess)
+        {
+            throw new UnauthorizedAccessException("User does not have access to this task");
         }
 
         var collaborators = await _collaboratorRepository.GetAllAsync();
         var taskCollaborators = collaborators.Where(c => c.TaskId == request.TaskId);
 
         var users = await _userRepository.GetAllAsync();
-        var userDict = users.ToDictionary(u => u.Id, u => $"{u.FirstName} {u.LastName}".Trim());
+        var userDict = users.ToDictionary(u => u.Id, u => u.DisplayName);
 
         return taskCollaborators.Select(c => new TaskCollaboratorDto
         {

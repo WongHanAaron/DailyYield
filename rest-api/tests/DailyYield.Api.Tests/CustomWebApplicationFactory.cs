@@ -25,6 +25,24 @@ public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProg
                 options.Audience = "test-audience";
                 options.ExpirationHours = 1;
             });
+
+            // Override JWT bearer configuration for testing
+            services.PostConfigure<Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerOptions>(
+                Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme,
+                options =>
+                {
+                    var key = System.Text.Encoding.ASCII.GetBytes("test-secret-key-for-jwt-signing-12345678901234567890");
+                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = "test-issuer",
+                        ValidAudience = "test-audience",
+                        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(key)
+                    };
+                });
         });
     }
 }

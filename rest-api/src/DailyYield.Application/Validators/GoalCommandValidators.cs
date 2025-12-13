@@ -14,10 +14,15 @@ public class CreateGoalCommandValidator : AbstractValidator<CreateGoalCommand>
             .NotEmpty().WithMessage("Metric type ID is required");
 
         RuleFor(x => x.TargetValue)
-            .GreaterThan(0).WithMessage("Target value must be greater than 0");
+            .NotEmpty().WithMessage("Target value is required")
+            .MaximumLength(100).WithMessage("Target value must not exceed 100 characters");
 
-        RuleFor(x => x.Timeframe)
-            .IsInEnum().WithMessage("Invalid timeframe");
+        RuleFor(x => x.TimeframeStart)
+            .NotEmpty().WithMessage("Timeframe start is required");
+
+        RuleFor(x => x.TimeframeEnd)
+            .NotEmpty().WithMessage("Timeframe end is required")
+            .GreaterThan(x => x.TimeframeStart).WithMessage("Timeframe end must be after timeframe start");
 
         RuleFor(x => x.GoalType)
             .IsInEnum().WithMessage("Invalid goal type");
@@ -42,10 +47,15 @@ public class UpdateGoalCommandValidator : AbstractValidator<UpdateGoalCommand>
             .NotEmpty().WithMessage("User ID is required");
 
         RuleFor(x => x.TargetValue)
-            .GreaterThan(0).WithMessage("Target value must be greater than 0");
+            .NotEmpty().WithMessage("Target value is required")
+            .MaximumLength(100).WithMessage("Target value must not exceed 100 characters");
 
-        RuleFor(x => x.Timeframe)
-            .IsInEnum().WithMessage("Invalid timeframe");
+        RuleFor(x => x.TimeframeStart)
+            .NotEmpty().WithMessage("Timeframe start is required");
+
+        RuleFor(x => x.TimeframeEnd)
+            .NotEmpty().WithMessage("Timeframe end is required")
+            .GreaterThan(x => x.TimeframeStart).WithMessage("Timeframe end must be after timeframe start");
 
         RuleFor(x => x.GoalType)
             .IsInEnum().WithMessage("Invalid goal type");

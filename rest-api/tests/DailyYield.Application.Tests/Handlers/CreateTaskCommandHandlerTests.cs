@@ -22,10 +22,8 @@ public class CreateTaskCommandHandlerTests
         var command = new CreateTaskCommand
         {
             Title = "Test Task",
-            Description = "Test Description",
-            UserId = Guid.NewGuid(),
-            UserGroupId = Guid.NewGuid(),
-            DueDate = DateTime.UtcNow.AddDays(1)
+            OwnerId = Guid.NewGuid(),
+            CategoryId = Guid.NewGuid()
         };
 
         var createdTaskId = Guid.NewGuid();
@@ -42,10 +40,8 @@ public class CreateTaskCommandHandlerTests
 
         taskRepositoryMock.Verify(x => x.AddAsync(It.Is<TaskEntity>(t =>
             t.Title == command.Title &&
-            t.Description == command.Description &&
-            t.UserId == command.UserId &&
-            t.UserGroupId == command.UserGroupId &&
-            t.DueDate == command.DueDate)), Times.Once);
+            t.OwnerId == command.OwnerId &&
+            t.CategoryId == command.CategoryId)), Times.Once);
     }
 
     [Fact]
@@ -58,7 +54,7 @@ public class CreateTaskCommandHandlerTests
         var command = new CreateTaskCommand
         {
             Title = "Minimal Task",
-            UserId = Guid.NewGuid()
+            OwnerId = Guid.NewGuid()
         };
 
         var createdTaskId = Guid.NewGuid();
@@ -75,10 +71,7 @@ public class CreateTaskCommandHandlerTests
 
         taskRepositoryMock.Verify(x => x.AddAsync(It.Is<TaskEntity>(t =>
             t.Title == command.Title &&
-            t.Description == command.Description &&
-            t.UserId == command.UserId &&
-            t.UserGroupId == command.UserGroupId &&
-            t.DueDate == command.DueDate)), Times.Once);
+            t.OwnerId == command.OwnerId)), Times.Once);
     }
 
     [Fact]
@@ -91,7 +84,7 @@ public class CreateTaskCommandHandlerTests
         var command = new CreateTaskCommand
         {
             Title = "Test Task",
-            UserId = Guid.NewGuid()
+            OwnerId = Guid.NewGuid()
         };
 
         var expectedException = new Exception("Database error");

@@ -24,7 +24,7 @@ public class DeleteTaskCommandHandler : IRequestHandler<DeleteTaskCommand>
             throw new KeyNotFoundException("Task not found");
         }
 
-        if (task.UserId != request.UserId)
+        if (task.OwnerId != request.UserId)
         {
             throw new UnauthorizedAccessException("User does not own this task");
         }

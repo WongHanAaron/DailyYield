@@ -5,6 +5,7 @@ using DailyYield.Domain.Ports;
 using FluentAssertions;
 using Moq;
 using Xunit;
+using AutoMapper;
 using Task = System.Threading.Tasks.Task;
 
 namespace DailyYield.Application.Tests.Handlers;
@@ -16,7 +17,8 @@ public class GetUserGroupsQueryHandlerTests
     {
         // Arrange
         var memberRepositoryMock = new Mock<IRepository<UserGroupMember>>();
-        var sut = new GetUserGroupsQueryHandler(memberRepositoryMock.Object);
+        var mapperMock = new Mock<IMapper>();
+        var sut = new GetUserGroupsQueryHandler(memberRepositoryMock.Object, mapperMock.Object);
 
         var userId = Guid.NewGuid();
         var userGroup1 = new UserGroup { Id = Guid.NewGuid(), Name = "Group 1", Timezone = "UTC" };
@@ -58,7 +60,8 @@ public class GetUserGroupsQueryHandlerTests
     {
         // Arrange
         var memberRepositoryMock = new Mock<IRepository<UserGroupMember>>();
-        var sut = new GetUserGroupsQueryHandler(memberRepositoryMock.Object);
+        var mapperMock = new Mock<IMapper>();
+        var sut = new GetUserGroupsQueryHandler(memberRepositoryMock.Object, mapperMock.Object);
 
         var userId = Guid.NewGuid();
         var memberships = new List<UserGroupMember>
@@ -84,7 +87,8 @@ public class GetUserGroupsQueryHandlerTests
     {
         // Arrange
         var memberRepositoryMock = new Mock<IRepository<UserGroupMember>>();
-        var sut = new GetUserGroupsQueryHandler(memberRepositoryMock.Object);
+        var mapperMock = new Mock<IMapper>();
+        var sut = new GetUserGroupsQueryHandler(memberRepositoryMock.Object, mapperMock.Object);
 
         var userId = Guid.NewGuid();
         var memberships = new List<UserGroupMember>();

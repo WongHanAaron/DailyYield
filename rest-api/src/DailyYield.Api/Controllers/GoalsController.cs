@@ -31,15 +31,13 @@ public class GoalsController : BaseController
     /// <returns>List of goals</returns>
     [HttpGet]
     public async Task<IActionResult> GetGoals(
-        [FromQuery] Guid? metricTypeId,
-        [FromQuery] GoalTimeframe? timeframe)
+        [FromQuery] Guid? metricTypeId)
     {
         var userId = GetCurrentUserId();
         var query = new GetGoalsQuery
         {
             UserId = userId,
-            MetricTypeId = metricTypeId,
-            Timeframe = timeframe
+            MetricTypeId = metricTypeId
         };
         var result = await _mediator.Send(query);
         return Ok(result);

@@ -19,11 +19,8 @@ public class YieldSummaryDto
 {
     public Guid Id { get; set; }
     public Guid UserId { get; set; }
-    public Guid UserGroupId { get; set; }
-    public string UserGroupName { get; set; } = string.Empty;
     public DateTime Date { get; set; }
-    public string MetricTotalsJson { get; set; } = "{}";
-    public TimeSpan TotalTaskTime { get; set; }
-    public int CompletedTasks { get; set; }
+    public string SummaryData { get; set; } = "{}";
     public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
 }

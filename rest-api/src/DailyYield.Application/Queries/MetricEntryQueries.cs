@@ -1,4 +1,5 @@
 using MediatR;
+using DailyYield.Domain.Entities;
 
 namespace DailyYield.Application.Queries;
 
@@ -23,9 +24,13 @@ public class MetricEntryDto
     public Guid MetricTypeId { get; set; }
     public string MetricTypeKey { get; set; } = string.Empty;
     public string MetricTypeDisplayName { get; set; } = string.Empty;
+    public MetricEntryType Type { get; set; }
     public decimal? NumericValue { get; set; }
     public bool? BooleanValue { get; set; }
     public string? CategoryValue { get; set; }
+    public DateTime? StartedAt { get; set; }
+    public DateTime? EndedAt { get; set; }
     public DateTime Timestamp { get; set; }
-    public string? Notes { get; set; }
+    public string? Metadata { get; set; }
+    public DateTime CreatedAt { get; set; }
 }

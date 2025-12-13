@@ -33,21 +33,11 @@ public class GetReminderQueryHandler : IRequestHandler<GetReminderQuery, Reminde
             throw new KeyNotFoundException("Reminder not found");
         }
 
-        // Check access
-        var hasAccess = reminder.UserId == request.UserId;
-        if (!hasAccess && reminder.UserGroupId.HasValue)
-        {
-            var memberships = await _memberRepository.GetAllAsync();
-            hasAccess = memberships.Any(m => m.UserId == request.UserId && m.UserGroupId == reminder.UserGroupId.Value);
-        }
-
-        if (!hasAccess)
+        // Check access - user must own the reminder
+        if (reminder.UserId != request.UserId)
         {
             throw new UnauthorizedAccessException("User does not have access to this reminder");
         }
-
-        var taskTitle = reminder.TaskId.HasValue ? (await _taskRepository.GetByIdAsync(reminder.TaskId.Value))?.Title : null;
-        var metricTypeName = reminder.MetricTypeId.HasValue ? (await _metricTypeRepository.GetByIdAsync(reminder.MetricTypeId.Value))?.DisplayName : null;
 
         return new ReminderDto
         {
@@ -55,15 +45,12 @@ public class GetReminderQueryHandler : IRequestHandler<GetReminderQuery, Reminde
             Title = reminder.Title,
             Description = reminder.Description,
             UserId = reminder.UserId,
-            UserGroupId = reminder.UserGroupId,
-            TaskId = reminder.TaskId,
-            TaskTitle = taskTitle,
-            MetricTypeId = reminder.MetricTypeId,
-            MetricTypeDisplayName = metricTypeName,
-            ScheduleType = reminder.ScheduleType,
-            Schedule = reminder.Schedule,
-            IsActive = reminder.IsActive,
-            CreatedAt = reminder.CreatedAt
+            ScheduledAt = reminder.ScheduledAt,
+            IsRecurring = reminder.IsRecurring,
+            RecurrencePattern = reminder.RecurrencePattern,
+            Status = reminder.Status,
+            CreatedAt = reminder.CreatedAt,
+            UpdatedAt = reminder.UpdatedAt
         };
     }
 }

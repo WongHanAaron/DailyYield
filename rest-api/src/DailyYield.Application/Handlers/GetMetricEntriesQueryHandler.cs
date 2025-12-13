@@ -48,11 +48,15 @@ public class GetMetricEntriesQueryHandler : IRequestHandler<GetMetricEntriesQuer
             MetricTypeId = e.MetricTypeId,
             MetricTypeKey = metricTypeDict.TryGetValue(e.MetricTypeId, out var mt) ? mt.Key : string.Empty,
             MetricTypeDisplayName = metricTypeDict.TryGetValue(e.MetricTypeId, out mt) ? mt.DisplayName : string.Empty,
+            Type = e.Type,
             NumericValue = e.NumericValue,
             BooleanValue = e.BooleanValue,
             CategoryValue = e.CategoryValue,
+            StartedAt = e.StartedAt,
+            EndedAt = e.EndedAt,
             Timestamp = e.Timestamp,
-            Notes = e.Notes
+            Metadata = e.Metadata,
+            CreatedAt = e.CreatedAt
         });
     }
 }

@@ -1,11 +1,12 @@
 using MediatR;
+using DailyYield.Domain.Entities;
 
 namespace DailyYield.Application.Queries;
 
 public class GetTasksQuery : IRequest<IEnumerable<TaskDto>>
 {
     public Guid UserId { get; set; }
-    public bool? IsCompleted { get; set; }
+    public DailyYield.Domain.Entities.TaskStatus? Status { get; set; }
 }
 
 public class GetTaskQuery : IRequest<TaskDto>
@@ -30,12 +31,11 @@ public class TaskDto
 {
     public Guid Id { get; set; }
     public string Title { get; set; } = string.Empty;
-    public string? Description { get; set; }
-    public Guid UserId { get; set; }
-    public Guid? UserGroupId { get; set; }
-    public bool IsCompleted { get; set; }
+    public Guid OwnerId { get; set; }
+    public Guid? CategoryId { get; set; }
+    public DailyYield.Domain.Entities.TaskStatus Status { get; set; }
     public DateTime CreatedAt { get; set; }
-    public DateTime? DueDate { get; set; }
+    public DateTime UpdatedAt { get; set; }
 }
 
 public class TaskTimerDto

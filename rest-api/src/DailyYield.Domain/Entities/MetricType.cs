@@ -7,6 +7,8 @@ public class MetricType
     public string DisplayName { get; set; } = string.Empty;
     public MetricDataType Type { get; set; } = MetricDataType.Numeric;
     public string? Unit { get; set; }
+    public string? Aggregation { get; set; } // sum, avg, count for numeric types
+    public string? Categories { get; set; } // JSON array of strings for categorical types
     public Guid UserGroupId { get; set; }
     public UserGroup UserGroup { get; set; } = null!;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

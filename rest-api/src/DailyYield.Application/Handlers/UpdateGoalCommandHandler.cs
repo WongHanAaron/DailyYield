@@ -29,10 +29,12 @@ public class UpdateGoalCommandHandler : IRequestHandler<UpdateGoalCommand>
         }
 
         goal.TargetValue = request.TargetValue;
-        goal.Timeframe = request.Timeframe;
+        goal.TimeframeStart = request.TimeframeStart;
+        goal.TimeframeEnd = request.TimeframeEnd;
         goal.GoalType = request.GoalType;
         goal.Frequency = request.Frequency;
         goal.Comparison = request.Comparison;
+        goal.Status = request.Status;
 
         await _goalRepository.UpdateAsync(goal);
     }

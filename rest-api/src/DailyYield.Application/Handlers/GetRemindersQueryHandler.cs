@@ -30,39 +30,23 @@ public class GetRemindersQueryHandler : IRequestHandler<GetRemindersQuery, IEnum
         var reminders = await _reminderRepository.GetAllAsync();
         var userReminders = reminders.Where(r => r.UserId == request.UserId);
 
-        // Also include reminders from user groups the user is member of
-        var memberships = await _memberRepository.GetAllAsync();
-        var userGroupIds = memberships.Where(m => m.UserId == request.UserId).Select(m => m.UserGroupId).ToList();
-        var groupReminders = reminders.Where(r => r.UserGroupId.HasValue && userGroupIds.Contains(r.UserGroupId.Value));
-
-        var allReminders = userReminders.Concat(groupReminders);
-
-        if (request.IsActive.HasValue)
+        if (request.Status.HasValue)
         {
-            allReminders = allReminders.Where(r => r.IsActive == request.IsActive.Value);
+            userReminders = userReminders.Where(r => r.Status == request.Status.Value);
         }
 
-        var tasks = await _taskRepository.GetAllAsync();
-        var taskDict = tasks.ToDictionary(t => t.Id, t => t.Title);
-
-        var metricTypes = await _metricTypeRepository.GetAllAsync();
-        var metricTypeDict = metricTypes.ToDictionary(mt => mt.Id, mt => mt.DisplayName);
-
-        return allReminders.Select(r => new ReminderDto
+        return userReminders.Select(r => new ReminderDto
         {
             Id = r.Id,
             Title = r.Title,
             Description = r.Description,
             UserId = r.UserId,
-            UserGroupId = r.UserGroupId,
-            TaskId = r.TaskId,
-            TaskTitle = r.TaskId.HasValue && taskDict.TryGetValue(r.TaskId.Value, out var taskTitle) ? taskTitle : null,
-            MetricTypeId = r.MetricTypeId,
-            MetricTypeDisplayName = r.MetricTypeId.HasValue && metricTypeDict.TryGetValue(r.MetricTypeId.Value, out var mtName) ? mtName : null,
-            ScheduleType = r.ScheduleType,
-            Schedule = r.Schedule,
-            IsActive = r.IsActive,
-            CreatedAt = r.CreatedAt
+            ScheduledAt = r.ScheduledAt,
+            IsRecurring = r.IsRecurring,
+            RecurrencePattern = r.RecurrencePattern,
+            Status = r.Status,
+            CreatedAt = r.CreatedAt,
+            UpdatedAt = r.UpdatedAt
         });
     }
 }

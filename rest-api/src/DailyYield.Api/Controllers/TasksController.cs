@@ -28,10 +28,10 @@ public class TasksController : BaseController
     /// <param name="isCompleted">Optional filter by completion status</param>
     /// <returns>List of tasks</returns>
     [HttpGet]
-    public async Task<IActionResult> GetTasks([FromQuery] bool? isCompleted)
+    public async Task<IActionResult> GetTasks([FromQuery] DailyYield.Domain.Entities.TaskStatus? status)
     {
         var userId = GetCurrentUserId();
-        var query = new GetTasksQuery { UserId = userId, IsCompleted = isCompleted };
+        var query = new GetTasksQuery { UserId = userId, Status = status };
         var result = await _mediator.Send(query);
         return Ok(result);
     }
@@ -60,7 +60,7 @@ public class TasksController : BaseController
     {
         var userId = GetCurrentUserId();
         var command = _mapper.Map<CreateTaskCommand>(request);
-        command.UserId = userId;
+        command.OwnerId = userId;
         var result = await _mediator.Send(command);
         return CreatedAtAction(nameof(GetTask), new { id = result }, result);
     }
@@ -77,7 +77,7 @@ public class TasksController : BaseController
         var userId = GetCurrentUserId();
         var command = _mapper.Map<UpdateTaskCommand>(request);
         command.Id = id;
-        command.UserId = userId;
+        command.OwnerId = userId;
         await _mediator.Send(command);
         return NoContent();
     }

@@ -20,11 +20,14 @@ public class CreateMetricEntryCommandHandler : IRequestHandler<CreateMetricEntry
         {
             UserId = request.UserId,
             MetricTypeId = request.MetricTypeId,
+            Type = request.Type,
             NumericValue = request.NumericValue,
             BooleanValue = request.BooleanValue,
             CategoryValue = request.CategoryValue,
+            StartedAt = request.StartedAt,
+            EndedAt = request.EndedAt,
             Timestamp = request.Timestamp ?? DateTime.UtcNow,
-            Notes = request.Notes
+            Metadata = request.Metadata
         };
 
         await _metricEntryRepository.AddAsync(metricEntry);

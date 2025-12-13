@@ -27,12 +27,16 @@ public class GetTaskTimersQueryHandler : IRequestHandler<GetTaskTimersQuery, IEn
             throw new KeyNotFoundException("Task not found");
         }
 
-        // Check access (similar to GetTaskQueryHandler)
-        var hasAccess = task.UserId == request.UserId;
-        if (!hasAccess && task.UserGroupId.HasValue)
+        // Check access - user must be owner or collaborator
+        var hasAccess = task.OwnerId == request.UserId;
+        if (!hasAccess)
         {
-            // For simplicity, assume user has access if they can see the task
-            // In real implementation, check membership
+            hasAccess = task.Collaborators.Any(c => c.UserId == request.UserId);
+        }
+
+        if (!hasAccess)
+        {
+            throw new UnauthorizedAccessException("User does not have access to this task");
         }
 
         var timers = await _timerRepository.GetAllAsync();

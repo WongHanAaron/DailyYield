@@ -25,8 +25,7 @@ public class AuthControllerTests : IClassFixture<CustomWebApplicationFactory<Pro
         {
             Email = "test@example.com",
             Password = "password123",
-            FirstName = "Test",
-            LastName = "User"
+            DisplayName = "Test User"
         };
 
         // Act
@@ -48,8 +47,7 @@ public class AuthControllerTests : IClassFixture<CustomWebApplicationFactory<Pro
         {
             Email = "existing@example.com",
             Password = "password123",
-            FirstName = "Existing",
-            LastName = "User"
+            DisplayName = "Existing User"
         };
 
         // First registration
@@ -71,8 +69,7 @@ public class AuthControllerTests : IClassFixture<CustomWebApplicationFactory<Pro
         {
             Email = "login@example.com",
             Password = "password123",
-            FirstName = "Login",
-            LastName = "User"
+            DisplayName = "Login User"
         };
         await client.PostAsJsonAsync("/api/auth/register", registerRequest);
 

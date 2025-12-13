@@ -21,11 +21,9 @@ public class CreateReminderCommandHandler : IRequestHandler<CreateReminderComman
             Title = request.Title,
             Description = request.Description,
             UserId = request.UserId,
-            UserGroupId = request.UserGroupId,
-            TaskId = request.TaskId,
-            MetricTypeId = request.MetricTypeId,
-            ScheduleType = request.ScheduleType,
-            Schedule = request.Schedule
+            ScheduledAt = request.ScheduledAt,
+            IsRecurring = request.IsRecurring,
+            RecurrencePattern = request.RecurrencePattern
         };
 
         await _reminderRepository.AddAsync(reminder);

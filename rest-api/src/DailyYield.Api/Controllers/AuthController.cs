@@ -42,8 +42,7 @@ public class AuthController : ControllerBase
         {
             Email = request.Email,
             PasswordHash = ((AuthService)_authService).HashPassword(request.Password),
-            FirstName = request.FirstName,
-            LastName = request.LastName
+            DisplayName = request.DisplayName
         };
 
         await _userRepository.AddAsync(user);
@@ -76,8 +75,7 @@ public class RegisterRequest
 {
     public string Email { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
-    public string FirstName { get; set; } = string.Empty;
-    public string LastName { get; set; } = string.Empty;
+    public string DisplayName { get; set; } = string.Empty;
 }
 
 public class LoginRequest
