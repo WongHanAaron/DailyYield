@@ -1,3 +1,4 @@
+using AutoMapper;
 using DailyYield.Application.Queries;
 using DailyYield.Domain.Entities;
 using DailyYield.Domain.Ports;
@@ -9,13 +10,16 @@ public class GetMetricEntryQueryHandler : IRequestHandler<GetMetricEntryQuery, M
 {
     private readonly IRepository<MetricEntry> _metricEntryRepository;
     private readonly IRepository<MetricType> _metricTypeRepository;
+    private readonly IMapper _mapper;
 
     public GetMetricEntryQueryHandler(
         IRepository<MetricEntry> metricEntryRepository,
-        IRepository<MetricType> metricTypeRepository)
+        IRepository<MetricType> metricTypeRepository,
+        IMapper mapper)
     {
         _metricEntryRepository = metricEntryRepository;
         _metricTypeRepository = metricTypeRepository;
+        _mapper = mapper;
     }
 
     public async Task<MetricEntryDto> Handle(GetMetricEntryQuery request, CancellationToken cancellationToken)
@@ -32,25 +36,11 @@ public class GetMetricEntryQueryHandler : IRequestHandler<GetMetricEntryQuery, M
         }
 
         var metricType = await _metricTypeRepository.GetByIdAsync(entry.MetricTypeId);
-        var metricTypeKey = metricType?.Key ?? string.Empty;
-        var metricTypeDisplayName = metricType?.DisplayName ?? string.Empty;
 
-        return new MetricEntryDto
-        {
-            Id = entry.Id,
-            UserId = entry.UserId,
-            MetricTypeId = entry.MetricTypeId,
-            MetricTypeKey = metricTypeKey,
-            MetricTypeDisplayName = metricTypeDisplayName,
-            Type = entry.Type,
-            NumericValue = entry.NumericValue,
-            BooleanValue = entry.BooleanValue,
-            CategoryValue = entry.CategoryValue,
-            StartedAt = entry.StartedAt,
-            EndedAt = entry.EndedAt,
-            Timestamp = entry.Timestamp,
-            Metadata = entry.Metadata,
-            CreatedAt = entry.CreatedAt
-        };
+        var entryDto = _mapper.Map<MetricEntryDto>(entry);
+        entryDto.MetricTypeKey = metricType?.Key ?? string.Empty;
+        entryDto.MetricTypeDisplayName = metricType?.DisplayName ?? string.Empty;
+
+        return entryDto;
     }
 }

@@ -1,3 +1,4 @@
+using AutoMapper;
 using DailyYield.Application.Queries;
 using DailyYield.Domain.Entities;
 using DailyYield.Domain.Ports;
@@ -10,13 +11,16 @@ public class GetTaskQueryHandler : IRequestHandler<GetTaskQuery, TaskDto>
 {
     private readonly IRepository<TaskEntity> _taskRepository;
     private readonly IRepository<UserGroupMember> _memberRepository;
+    private readonly IMapper _mapper;
 
     public GetTaskQueryHandler(
         IRepository<TaskEntity> taskRepository,
-        IRepository<UserGroupMember> memberRepository)
+        IRepository<UserGroupMember> memberRepository,
+        IMapper mapper)
     {
         _taskRepository = taskRepository;
         _memberRepository = memberRepository;
+        _mapper = mapper;
     }
 
     public async Task<TaskDto> Handle(GetTaskQuery request, CancellationToken cancellationToken)
@@ -39,15 +43,6 @@ public class GetTaskQueryHandler : IRequestHandler<GetTaskQuery, TaskDto>
             throw new UnauthorizedAccessException("User does not have access to this task");
         }
 
-        return new TaskDto
-        {
-            Id = task.Id,
-            Title = task.Title,
-            OwnerId = task.OwnerId,
-            CategoryId = task.CategoryId,
-            Status = task.Status,
-            CreatedAt = task.CreatedAt,
-            UpdatedAt = task.UpdatedAt
-        };
+        return _mapper.Map<TaskDto>(task);
     }
 }

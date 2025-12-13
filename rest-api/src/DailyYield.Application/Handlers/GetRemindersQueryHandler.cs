@@ -1,3 +1,4 @@
+using AutoMapper;
 using DailyYield.Application.Queries;
 using DailyYield.Domain.Entities;
 using DailyYield.Domain.Ports;
@@ -12,17 +13,20 @@ public class GetRemindersQueryHandler : IRequestHandler<GetRemindersQuery, IEnum
     private readonly IRepository<TaskEntity> _taskRepository;
     private readonly IRepository<MetricType> _metricTypeRepository;
     private readonly IRepository<UserGroupMember> _memberRepository;
+    private readonly IMapper _mapper;
 
     public GetRemindersQueryHandler(
         IRepository<Reminder> reminderRepository,
         IRepository<TaskEntity> taskRepository,
         IRepository<MetricType> metricTypeRepository,
-        IRepository<UserGroupMember> memberRepository)
+        IRepository<UserGroupMember> memberRepository,
+        IMapper mapper)
     {
         _reminderRepository = reminderRepository;
         _taskRepository = taskRepository;
         _metricTypeRepository = metricTypeRepository;
         _memberRepository = memberRepository;
+        _mapper = mapper;
     }
 
     public async Task<IEnumerable<ReminderDto>> Handle(GetRemindersQuery request, CancellationToken cancellationToken)
@@ -35,18 +39,6 @@ public class GetRemindersQueryHandler : IRequestHandler<GetRemindersQuery, IEnum
             userReminders = userReminders.Where(r => r.Status == request.Status.Value);
         }
 
-        return userReminders.Select(r => new ReminderDto
-        {
-            Id = r.Id,
-            Title = r.Title,
-            Description = r.Description,
-            UserId = r.UserId,
-            ScheduledAt = r.ScheduledAt,
-            IsRecurring = r.IsRecurring,
-            RecurrencePattern = r.RecurrencePattern,
-            Status = r.Status,
-            CreatedAt = r.CreatedAt,
-            UpdatedAt = r.UpdatedAt
-        });
+        return _mapper.Map<IEnumerable<ReminderDto>>(userReminders);
     }
 }

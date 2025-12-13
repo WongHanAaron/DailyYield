@@ -1,3 +1,4 @@
+using AutoMapper;
 using DailyYield.Application.Queries;
 using DailyYield.Domain.Entities;
 using DailyYield.Domain.Ports;
@@ -9,13 +10,16 @@ public class GetMetricTypesQueryHandler : IRequestHandler<GetMetricTypesQuery, I
 {
     private readonly IRepository<MetricType> _metricTypeRepository;
     private readonly IRepository<UserGroupMember> _memberRepository;
+    private readonly IMapper _mapper;
 
     public GetMetricTypesQueryHandler(
         IRepository<MetricType> metricTypeRepository,
-        IRepository<UserGroupMember> memberRepository)
+        IRepository<UserGroupMember> memberRepository,
+        IMapper mapper)
     {
         _metricTypeRepository = metricTypeRepository;
         _memberRepository = memberRepository;
+        _mapper = mapper;
     }
 
     public async Task<IEnumerable<MetricTypeDto>> Handle(GetMetricTypesQuery request, CancellationToken cancellationToken)
@@ -28,15 +32,6 @@ public class GetMetricTypesQueryHandler : IRequestHandler<GetMetricTypesQuery, I
         var metricTypes = await _metricTypeRepository.GetAllAsync();
         var filtered = metricTypes.Where(mt => userGroupIds.Contains(mt.UserGroupId));
 
-        return filtered.Select(mt => new MetricTypeDto
-        {
-            Id = mt.Id,
-            Key = mt.Key,
-            DisplayName = mt.DisplayName,
-            Type = mt.Type,
-            Unit = mt.Unit,
-            UserGroupId = mt.UserGroupId,
-            CreatedAt = mt.CreatedAt
-        });
+        return _mapper.Map<IEnumerable<MetricTypeDto>>(filtered);
     }
 }

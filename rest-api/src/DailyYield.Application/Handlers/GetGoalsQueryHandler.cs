@@ -1,3 +1,4 @@
+using AutoMapper;
 using DailyYield.Application.Queries;
 using DailyYield.Domain.Entities;
 using DailyYield.Domain.Ports;
@@ -10,15 +11,18 @@ public class GetGoalsQueryHandler : IRequestHandler<GetGoalsQuery, IEnumerable<G
     private readonly IRepository<Goal> _goalRepository;
     private readonly IRepository<MetricType> _metricTypeRepository;
     private readonly IRepository<UserGroupMember> _memberRepository;
+    private readonly IMapper _mapper;
 
     public GetGoalsQueryHandler(
         IRepository<Goal> goalRepository,
         IRepository<MetricType> metricTypeRepository,
-        IRepository<UserGroupMember> memberRepository)
+        IRepository<UserGroupMember> memberRepository,
+        IMapper mapper)
     {
         _goalRepository = goalRepository;
         _metricTypeRepository = metricTypeRepository;
         _memberRepository = memberRepository;
+        _mapper = mapper;
     }
 
     public async Task<IEnumerable<GoalDto>> Handle(GetGoalsQuery request, CancellationToken cancellationToken)
@@ -41,23 +45,17 @@ public class GetGoalsQueryHandler : IRequestHandler<GetGoalsQuery, IEnumerable<G
         var metricTypes = await _metricTypeRepository.GetAllAsync();
         var metricTypeDict = metricTypes.ToDictionary(mt => mt.Id, mt => (mt.Key, mt.DisplayName));
 
-        return allGoals.Select(g => new GoalDto
+        var goalDtos = _mapper.Map<IEnumerable<GoalDto>>(allGoals).ToList();
+        
+        foreach (var goalDto in goalDtos)
         {
-            Id = g.Id,
-            MetricTypeId = g.MetricTypeId,
-            MetricTypeKey = metricTypeDict.TryGetValue(g.MetricTypeId, out var mt) ? mt.Key : string.Empty,
-            MetricTypeDisplayName = metricTypeDict.TryGetValue(g.MetricTypeId, out mt) ? mt.DisplayName : string.Empty,
-            UserId = g.UserId,
-            UserGroupId = g.UserGroupId,
-            TargetValue = g.TargetValue,
-            TimeframeStart = g.TimeframeStart,
-            TimeframeEnd = g.TimeframeEnd,
-            GoalType = g.GoalType,
-            Frequency = g.Frequency,
-            Comparison = g.Comparison,
-            Status = g.Status,
-            CreatedAt = g.CreatedAt,
-            UpdatedAt = g.UpdatedAt
-        });
+            if (metricTypeDict.TryGetValue(goalDto.MetricTypeId, out var mt))
+            {
+                goalDto.MetricTypeKey = mt.Key;
+                goalDto.MetricTypeDisplayName = mt.DisplayName;
+            }
+        }
+
+        return goalDtos;
     }
 }

@@ -1,3 +1,4 @@
+using AutoMapper;
 using DailyYield.Application.Queries;
 using DailyYield.Domain.Entities;
 using DailyYield.Domain.Ports;
@@ -8,10 +9,12 @@ namespace DailyYield.Application.Handlers;
 public class GetYieldSummaryQueryHandler : IRequestHandler<GetYieldSummaryQuery, YieldSummaryDto>
 {
     private readonly IRepository<YieldSummary> _yieldSummaryRepository;
+    private readonly IMapper _mapper;
 
-    public GetYieldSummaryQueryHandler(IRepository<YieldSummary> yieldSummaryRepository)
+    public GetYieldSummaryQueryHandler(IRepository<YieldSummary> yieldSummaryRepository, IMapper mapper)
     {
         _yieldSummaryRepository = yieldSummaryRepository;
+        _mapper = mapper;
     }
 
     public async Task<YieldSummaryDto> Handle(GetYieldSummaryQuery request, CancellationToken cancellationToken)
@@ -28,14 +31,6 @@ public class GetYieldSummaryQueryHandler : IRequestHandler<GetYieldSummaryQuery,
             throw new UnauthorizedAccessException("User does not have access to this yield summary");
         }
 
-        return new YieldSummaryDto
-        {
-            Id = summary.Id,
-            UserId = summary.UserId,
-            Date = summary.Date,
-            SummaryData = summary.SummaryData,
-            CreatedAt = summary.CreatedAt,
-            UpdatedAt = summary.UpdatedAt
-        };
+        return _mapper.Map<YieldSummaryDto>(summary);
     }
 }

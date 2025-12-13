@@ -1,3 +1,4 @@
+using AutoMapper;
 using DailyYield.Application.Queries;
 using DailyYield.Domain.Entities;
 using DailyYield.Domain.Ports;
@@ -9,13 +10,16 @@ public class GetMetricTypeQueryHandler : IRequestHandler<GetMetricTypeQuery, Met
 {
     private readonly IRepository<MetricType> _metricTypeRepository;
     private readonly IRepository<UserGroupMember> _memberRepository;
+    private readonly IMapper _mapper;
 
     public GetMetricTypeQueryHandler(
         IRepository<MetricType> metricTypeRepository,
-        IRepository<UserGroupMember> memberRepository)
+        IRepository<UserGroupMember> memberRepository,
+        IMapper mapper)
     {
         _metricTypeRepository = metricTypeRepository;
         _memberRepository = memberRepository;
+        _mapper = mapper;
     }
 
     public async Task<MetricTypeDto> Handle(GetMetricTypeQuery request, CancellationToken cancellationToken)
@@ -34,15 +38,6 @@ public class GetMetricTypeQueryHandler : IRequestHandler<GetMetricTypeQuery, Met
             throw new UnauthorizedAccessException("User does not have access to this metric type");
         }
 
-        return new MetricTypeDto
-        {
-            Id = metricType.Id,
-            Key = metricType.Key,
-            DisplayName = metricType.DisplayName,
-            Type = metricType.Type,
-            Unit = metricType.Unit,
-            UserGroupId = metricType.UserGroupId,
-            CreatedAt = metricType.CreatedAt
-        };
+        return _mapper.Map<MetricTypeDto>(metricType);
     }
 }

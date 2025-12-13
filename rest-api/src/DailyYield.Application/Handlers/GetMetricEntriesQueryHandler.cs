@@ -1,3 +1,4 @@
+using AutoMapper;
 using DailyYield.Application.Queries;
 using DailyYield.Domain.Entities;
 using DailyYield.Domain.Ports;
@@ -9,13 +10,16 @@ public class GetMetricEntriesQueryHandler : IRequestHandler<GetMetricEntriesQuer
 {
     private readonly IRepository<MetricEntry> _metricEntryRepository;
     private readonly IRepository<MetricType> _metricTypeRepository;
+    private readonly IMapper _mapper;
 
     public GetMetricEntriesQueryHandler(
         IRepository<MetricEntry> metricEntryRepository,
-        IRepository<MetricType> metricTypeRepository)
+        IRepository<MetricType> metricTypeRepository,
+        IMapper mapper)
     {
         _metricEntryRepository = metricEntryRepository;
         _metricTypeRepository = metricTypeRepository;
+        _mapper = mapper;
     }
 
     public async Task<IEnumerable<MetricEntryDto>> Handle(GetMetricEntriesQuery request, CancellationToken cancellationToken)
@@ -41,22 +45,17 @@ public class GetMetricEntriesQueryHandler : IRequestHandler<GetMetricEntriesQuer
         var metricTypes = await _metricTypeRepository.GetAllAsync();
         var metricTypeDict = metricTypes.ToDictionary(mt => mt.Id, mt => (mt.Key, mt.DisplayName));
 
-        return filtered.Select(e => new MetricEntryDto
+        var entryDtos = _mapper.Map<IEnumerable<MetricEntryDto>>(filtered).ToList();
+        
+        foreach (var entryDto in entryDtos)
         {
-            Id = e.Id,
-            UserId = e.UserId,
-            MetricTypeId = e.MetricTypeId,
-            MetricTypeKey = metricTypeDict.TryGetValue(e.MetricTypeId, out var mt) ? mt.Key : string.Empty,
-            MetricTypeDisplayName = metricTypeDict.TryGetValue(e.MetricTypeId, out mt) ? mt.DisplayName : string.Empty,
-            Type = e.Type,
-            NumericValue = e.NumericValue,
-            BooleanValue = e.BooleanValue,
-            CategoryValue = e.CategoryValue,
-            StartedAt = e.StartedAt,
-            EndedAt = e.EndedAt,
-            Timestamp = e.Timestamp,
-            Metadata = e.Metadata,
-            CreatedAt = e.CreatedAt
-        });
+            if (metricTypeDict.TryGetValue(entryDto.MetricTypeId, out var mt))
+            {
+                entryDto.MetricTypeKey = mt.Key;
+                entryDto.MetricTypeDisplayName = mt.DisplayName;
+            }
+        }
+
+        return entryDtos;
     }
 }

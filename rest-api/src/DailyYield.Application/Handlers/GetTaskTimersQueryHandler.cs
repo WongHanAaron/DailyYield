@@ -1,3 +1,4 @@
+using AutoMapper;
 using DailyYield.Application.Queries;
 using DailyYield.Domain.Entities;
 using DailyYield.Domain.Ports;
@@ -10,13 +11,16 @@ public class GetTaskTimersQueryHandler : IRequestHandler<GetTaskTimersQuery, IEn
 {
     private readonly IRepository<TaskTimer> _timerRepository;
     private readonly IRepository<TaskEntity> _taskRepository;
+    private readonly IMapper _mapper;
 
     public GetTaskTimersQueryHandler(
         IRepository<TaskTimer> timerRepository,
-        IRepository<TaskEntity> taskRepository)
+        IRepository<TaskEntity> taskRepository,
+        IMapper mapper)
     {
         _timerRepository = timerRepository;
         _taskRepository = taskRepository;
+        _mapper = mapper;
     }
 
     public async Task<IEnumerable<TaskTimerDto>> Handle(GetTaskTimersQuery request, CancellationToken cancellationToken)
@@ -42,13 +46,6 @@ public class GetTaskTimersQueryHandler : IRequestHandler<GetTaskTimersQuery, IEn
         var timers = await _timerRepository.GetAllAsync();
         var taskTimers = timers.Where(t => t.TaskId == request.TaskId);
 
-        return taskTimers.Select(t => new TaskTimerDto
-        {
-            Id = t.Id,
-            TaskId = t.TaskId,
-            StartedAt = t.StartedAt,
-            EndedAt = t.EndedAt,
-            Duration = t.Duration
-        });
+        return _mapper.Map<IEnumerable<TaskTimerDto>>(taskTimers);
     }
 }

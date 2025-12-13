@@ -1,3 +1,4 @@
+using AutoMapper;
 using DailyYield.Application.Queries;
 using DailyYield.Domain.Entities;
 using DailyYield.Domain.Ports;
@@ -10,13 +11,16 @@ public class GetTasksQueryHandler : IRequestHandler<GetTasksQuery, IEnumerable<T
 {
     private readonly IRepository<TaskEntity> _taskRepository;
     private readonly IRepository<UserGroupMember> _memberRepository;
+    private readonly IMapper _mapper;
 
     public GetTasksQueryHandler(
         IRepository<TaskEntity> taskRepository,
-        IRepository<UserGroupMember> memberRepository)
+        IRepository<UserGroupMember> memberRepository,
+        IMapper mapper)
     {
         _taskRepository = taskRepository;
         _memberRepository = memberRepository;
+        _mapper = mapper;
     }
 
     public async Task<IEnumerable<TaskDto>> Handle(GetTasksQuery request, CancellationToken cancellationToken)
@@ -32,15 +36,6 @@ public class GetTasksQueryHandler : IRequestHandler<GetTasksQuery, IEnumerable<T
             userTasks = userTasks.Where(t => t.Status == request.Status.Value);
         }
 
-        return userTasks.Select(t => new TaskDto
-        {
-            Id = t.Id,
-            Title = t.Title,
-            OwnerId = t.OwnerId,
-            CategoryId = t.CategoryId,
-            Status = t.Status,
-            CreatedAt = t.CreatedAt,
-            UpdatedAt = t.UpdatedAt
-        });
+        return _mapper.Map<IEnumerable<TaskDto>>(userTasks);
     }
 }

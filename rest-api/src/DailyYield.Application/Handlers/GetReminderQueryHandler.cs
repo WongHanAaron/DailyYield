@@ -1,3 +1,4 @@
+using AutoMapper;
 using DailyYield.Application.Queries;
 using DailyYield.Domain.Entities;
 using DailyYield.Domain.Ports;
@@ -12,17 +13,20 @@ public class GetReminderQueryHandler : IRequestHandler<GetReminderQuery, Reminde
     private readonly IRepository<TaskEntity> _taskRepository;
     private readonly IRepository<MetricType> _metricTypeRepository;
     private readonly IRepository<UserGroupMember> _memberRepository;
+    private readonly IMapper _mapper;
 
     public GetReminderQueryHandler(
         IRepository<Reminder> reminderRepository,
         IRepository<TaskEntity> taskRepository,
         IRepository<MetricType> metricTypeRepository,
-        IRepository<UserGroupMember> memberRepository)
+        IRepository<UserGroupMember> memberRepository,
+        IMapper mapper)
     {
         _reminderRepository = reminderRepository;
         _taskRepository = taskRepository;
         _metricTypeRepository = metricTypeRepository;
         _memberRepository = memberRepository;
+        _mapper = mapper;
     }
 
     public async Task<ReminderDto> Handle(GetReminderQuery request, CancellationToken cancellationToken)
@@ -39,18 +43,6 @@ public class GetReminderQueryHandler : IRequestHandler<GetReminderQuery, Reminde
             throw new UnauthorizedAccessException("User does not have access to this reminder");
         }
 
-        return new ReminderDto
-        {
-            Id = reminder.Id,
-            Title = reminder.Title,
-            Description = reminder.Description,
-            UserId = reminder.UserId,
-            ScheduledAt = reminder.ScheduledAt,
-            IsRecurring = reminder.IsRecurring,
-            RecurrencePattern = reminder.RecurrencePattern,
-            Status = reminder.Status,
-            CreatedAt = reminder.CreatedAt,
-            UpdatedAt = reminder.UpdatedAt
-        };
+        return _mapper.Map<ReminderDto>(reminder);
     }
 }

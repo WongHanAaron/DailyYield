@@ -1,3 +1,4 @@
+using AutoMapper;
 using DailyYield.Application.Queries;
 using DailyYield.Domain.Entities;
 using DailyYield.Domain.Ports;
@@ -11,15 +12,18 @@ public class GetTaskCollaboratorsQueryHandler : IRequestHandler<GetTaskCollabora
     private readonly IRepository<TaskCollaborator> _collaboratorRepository;
     private readonly IRepository<TaskEntity> _taskRepository;
     private readonly IRepository<User> _userRepository;
+    private readonly IMapper _mapper;
 
     public GetTaskCollaboratorsQueryHandler(
         IRepository<TaskCollaborator> collaboratorRepository,
         IRepository<TaskEntity> taskRepository,
-        IRepository<User> userRepository)
+        IRepository<User> userRepository,
+        IMapper mapper)
     {
         _collaboratorRepository = collaboratorRepository;
         _taskRepository = taskRepository;
         _userRepository = userRepository;
+        _mapper = mapper;
     }
 
     public async Task<IEnumerable<TaskCollaboratorDto>> Handle(GetTaskCollaboratorsQuery request, CancellationToken cancellationToken)
@@ -45,16 +49,6 @@ public class GetTaskCollaboratorsQueryHandler : IRequestHandler<GetTaskCollabora
         var collaborators = await _collaboratorRepository.GetAllAsync();
         var taskCollaborators = collaborators.Where(c => c.TaskId == request.TaskId);
 
-        var users = await _userRepository.GetAllAsync();
-        var userDict = users.ToDictionary(u => u.Id, u => u.DisplayName);
-
-        return taskCollaborators.Select(c => new TaskCollaboratorDto
-        {
-            Id = c.Id,
-            TaskId = c.TaskId,
-            UserId = c.UserId,
-            UserName = userDict.TryGetValue(c.UserId, out var name) ? name : "Unknown",
-            AddedAt = c.AddedAt
-        });
+        return _mapper.Map<IEnumerable<TaskCollaboratorDto>>(taskCollaborators);
     }
 }

@@ -1,3 +1,4 @@
+using AutoMapper;
 using DailyYield.Application.Queries;
 using DailyYield.Domain.Entities;
 using DailyYield.Domain.Ports;
@@ -10,15 +11,18 @@ public class GetGoalQueryHandler : IRequestHandler<GetGoalQuery, GoalDto>
     private readonly IRepository<Goal> _goalRepository;
     private readonly IRepository<MetricType> _metricTypeRepository;
     private readonly IRepository<UserGroupMember> _memberRepository;
+    private readonly IMapper _mapper;
 
     public GetGoalQueryHandler(
         IRepository<Goal> goalRepository,
         IRepository<MetricType> metricTypeRepository,
-        IRepository<UserGroupMember> memberRepository)
+        IRepository<UserGroupMember> memberRepository,
+        IMapper mapper)
     {
         _goalRepository = goalRepository;
         _metricTypeRepository = metricTypeRepository;
         _memberRepository = memberRepository;
+        _mapper = mapper;
     }
 
     public async Task<GoalDto> Handle(GetGoalQuery request, CancellationToken cancellationToken)
@@ -44,23 +48,10 @@ public class GetGoalQueryHandler : IRequestHandler<GetGoalQuery, GoalDto>
 
         var metricType = await _metricTypeRepository.GetByIdAsync(goal.MetricTypeId);
 
-        return new GoalDto
-        {
-            Id = goal.Id,
-            MetricTypeId = goal.MetricTypeId,
-            MetricTypeKey = metricType?.Key ?? string.Empty,
-            MetricTypeDisplayName = metricType?.DisplayName ?? string.Empty,
-            UserId = goal.UserId,
-            UserGroupId = goal.UserGroupId,
-            TargetValue = goal.TargetValue,
-            TimeframeStart = goal.TimeframeStart,
-            TimeframeEnd = goal.TimeframeEnd,
-            GoalType = goal.GoalType,
-            Frequency = goal.Frequency,
-            Comparison = goal.Comparison,
-            Status = goal.Status,
-            CreatedAt = goal.CreatedAt,
-            UpdatedAt = goal.UpdatedAt
-        };
+        var goalDto = _mapper.Map<GoalDto>(goal);
+        goalDto.MetricTypeKey = metricType?.Key ?? string.Empty;
+        goalDto.MetricTypeDisplayName = metricType?.DisplayName ?? string.Empty;
+
+        return goalDto;
     }
 }
