@@ -30,7 +30,7 @@ public class CreateUserGroupCommandValidatorTests
     [Theory]
     [InlineData("")]
     [InlineData(null)]
-    public void Validate_NameIsEmpty_ShouldFail(string name)
+    public void Validate_NameIsEmpty_ShouldFail(string? name)
     {
         // Arrange
         var sut = new CreateUserGroupCommandValidator();
@@ -98,7 +98,7 @@ public class CreateUserGroupCommandValidatorTests
     [Theory]
     [InlineData("")]
     [InlineData(null)]
-    public void Validate_TimezoneIsEmpty_ShouldFail(string timezone)
+    public void Validate_TimezoneIsEmpty_ShouldFail(string? timezone)
     {
         // Arrange
         var sut = new CreateUserGroupCommandValidator();
