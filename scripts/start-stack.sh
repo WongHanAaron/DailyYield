@@ -23,7 +23,7 @@ fi
 cd "$SCRIPTS_DIR"
 
 echo "Starting Docker services..."
-docker compose up --build -d
+docker compose up --build -d --remove-orphans
 
 echo "Waiting for services to be healthy..."
 # Wait for API to be healthy (healthcheck is defined in docker-compose.yml)
