@@ -3,7 +3,7 @@ version: '3.8'
 services:
   api:
     build:
-      context: .
+      context: ../rest-api
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
