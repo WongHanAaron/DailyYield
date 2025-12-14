@@ -13,6 +13,7 @@ public class DailyYieldDbContext : DbContext
     public DbSet<UserGroupMember> UserGroupMembers { get; set; }
     public DbSet<MetricType> MetricTypes { get; set; }
     public DbSet<MetricEntry> MetricEntries { get; set; }
+    public DbSet<Category> Categories { get; set; }
     public DbSet<TaskEntity> Tasks { get; set; }
     public DbSet<TaskTimer> TaskTimers { get; set; }
     public DbSet<TaskCollaborator> TaskCollaborators { get; set; }
@@ -67,6 +68,15 @@ public class DailyYieldDbContext : DbContext
             entity.HasOne(e => e.MetricType).WithMany(mt => mt.Entries).HasForeignKey(e => e.MetricTypeId);
         });
 
+        modelBuilder.Entity<Category>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasIndex(e => new { e.Name, e.UserGroupId }).IsUnique();
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
+            entity.Property(e => e.Description).HasMaxLength(500);
+            entity.HasOne(e => e.UserGroup).WithMany().HasForeignKey(e => e.UserGroupId);
+        });
+
         modelBuilder.Entity<DailyYield.Domain.Entities.Task>(entity =>
         {
             entity.HasKey(e => e.Id);
@@ -104,18 +114,23 @@ public class DailyYieldDbContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Title).IsRequired().HasMaxLength(200);
-            entity.Property(e => e.Description).HasMaxLength(1000);
-            entity.Property(e => e.RecurrencePattern).HasMaxLength(500);
-            entity.Property(e => e.Status).HasConversion<string>().IsRequired().HasMaxLength(20);
+            entity.Property(e => e.Message).HasMaxLength(1000);
+            entity.Property(e => e.ReminderType).HasConversion<string>().IsRequired().HasMaxLength(20);
+            entity.Property(e => e.Schedule).IsRequired().HasMaxLength(1000); // JSON
             entity.HasOne(e => e.User).WithMany(u => u.Reminders).HasForeignKey(e => e.UserId);
+            entity.HasOne(e => e.UserGroup).WithMany().HasForeignKey(e => e.UserGroupId);
+            entity.HasOne(e => e.Task).WithMany(t => t.Reminders).HasForeignKey(e => e.TaskId);
+            entity.HasOne(e => e.MetricType).WithMany(mt => mt.Reminders).HasForeignKey(e => e.MetricTypeId);
         });
 
         modelBuilder.Entity<YieldSummary>(entity =>
         {
             entity.HasKey(e => e.Id);
             entity.HasIndex(e => new { e.UserId, e.Date }).IsUnique();
-            entity.Property(e => e.SummaryData).HasColumnType("jsonb");
+            entity.Property(e => e.MetricsSummary).HasColumnType("jsonb");
+            entity.Property(e => e.TasksSummary).HasColumnType("jsonb");
             entity.HasOne(e => e.User).WithMany().HasForeignKey(e => e.UserId);
+            entity.HasOne(e => e.UserGroup).WithMany().HasForeignKey(e => e.UserGroupId);
         });
     }
 }

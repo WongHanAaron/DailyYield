@@ -15,16 +15,27 @@ public class CreateReminderCommandValidator : AbstractValidator<CreateReminderCo
             .MinimumLength(1).WithMessage("Title must be at least 1 character")
             .MaximumLength(200).WithMessage("Title must not exceed 200 characters");
 
-        RuleFor(x => x.Description)
-            .MaximumLength(1000).WithMessage("Description must not exceed 1000 characters")
-            .When(x => !string.IsNullOrEmpty(x.Description));
+        RuleFor(x => x.Message)
+            .MaximumLength(1000).WithMessage("Message must not exceed 1000 characters")
+            .When(x => !string.IsNullOrEmpty(x.Message));
 
-        RuleFor(x => x.ScheduledAt)
-            .NotEmpty().WithMessage("Scheduled time is required");
+        RuleFor(x => x.Schedule)
+            .NotEmpty().WithMessage("Schedule is required")
+            .MaximumLength(1000).WithMessage("Schedule must not exceed 1000 characters");
 
-        RuleFor(x => x.RecurrencePattern)
-            .MaximumLength(500).WithMessage("Recurrence pattern must not exceed 500 characters")
-            .When(x => !string.IsNullOrEmpty(x.RecurrencePattern));
+        // Ensure either UserId or UserGroupId is set, but not both
+        RuleFor(x => x)
+            .Must(x => x.UserId != Guid.Empty || x.UserGroupId != Guid.Empty)
+            .WithMessage("Either UserId or UserGroupId must be specified");
+
+        RuleFor(x => x)
+            .Must(x => !(x.UserId != Guid.Empty && x.UserGroupId != Guid.Empty))
+            .WithMessage("Cannot specify both UserId and UserGroupId");
+
+        // Ensure either TaskId or MetricTypeId is set
+        RuleFor(x => x)
+            .Must(x => x.TaskId != Guid.Empty || x.MetricTypeId != Guid.Empty)
+            .WithMessage("Either TaskId or MetricTypeId must be specified");
     }
 }
 
@@ -43,16 +54,27 @@ public class UpdateReminderCommandValidator : AbstractValidator<UpdateReminderCo
             .MinimumLength(1).WithMessage("Title must be at least 1 character")
             .MaximumLength(200).WithMessage("Title must not exceed 200 characters");
 
-        RuleFor(x => x.Description)
-            .MaximumLength(1000).WithMessage("Description must not exceed 1000 characters")
-            .When(x => !string.IsNullOrEmpty(x.Description));
+        RuleFor(x => x.Message)
+            .MaximumLength(1000).WithMessage("Message must not exceed 1000 characters")
+            .When(x => !string.IsNullOrEmpty(x.Message));
 
-        RuleFor(x => x.ScheduledAt)
-            .NotEmpty().WithMessage("Scheduled time is required");
+        RuleFor(x => x.Schedule)
+            .NotEmpty().WithMessage("Schedule is required")
+            .MaximumLength(1000).WithMessage("Schedule must not exceed 1000 characters");
 
-        RuleFor(x => x.RecurrencePattern)
-            .MaximumLength(500).WithMessage("Recurrence pattern must not exceed 500 characters")
-            .When(x => !string.IsNullOrEmpty(x.RecurrencePattern));
+        // Ensure either UserId or UserGroupId is set, but not both
+        RuleFor(x => x)
+            .Must(x => x.UserId != Guid.Empty || x.UserGroupId != Guid.Empty)
+            .WithMessage("Either UserId or UserGroupId must be specified");
+
+        RuleFor(x => x)
+            .Must(x => !(x.UserId != Guid.Empty && x.UserGroupId != Guid.Empty))
+            .WithMessage("Cannot specify both UserId and UserGroupId");
+
+        // Ensure either TaskId or MetricTypeId is set
+        RuleFor(x => x)
+            .Must(x => x.TaskId != Guid.Empty || x.MetricTypeId != Guid.Empty)
+            .WithMessage("Either TaskId or MetricTypeId must be specified");
     }
 }
 

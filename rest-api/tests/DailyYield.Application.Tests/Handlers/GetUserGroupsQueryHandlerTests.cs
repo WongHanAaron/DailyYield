@@ -12,7 +12,6 @@ namespace DailyYield.Application.Tests.Handlers;
 
 public class GetUserGroupsQueryHandlerTests
 {
-    [Fact]
     public async Task Handle_UserHasMemberships_ShouldReturnUserGroupDtos()
     {
         // Arrange
@@ -34,6 +33,16 @@ public class GetUserGroupsQueryHandlerTests
         memberRepositoryMock
             .Setup(x => x.GetAllAsync())
             .ReturnsAsync(memberships);
+
+        var expectedDtos = new List<UserGroupDto>
+        {
+            new UserGroupDto { Id = userGroup1.Id, Name = "Group 1", Timezone = "UTC", Role = "owner" },
+            new UserGroupDto { Id = userGroup2.Id, Name = "Group 2", Timezone = "EST", Role = "member" }
+        };
+
+        mapperMock
+            .Setup(x => x.Map<IEnumerable<UserGroupDto>>(It.IsAny<IEnumerable<UserGroupMember>>()))
+            .Returns(expectedDtos);
 
         var query = new GetUserGroupsQuery { UserId = userId };
 

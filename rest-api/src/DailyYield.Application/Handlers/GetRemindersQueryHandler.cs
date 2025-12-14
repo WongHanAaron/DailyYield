@@ -34,9 +34,9 @@ public class GetRemindersQueryHandler : IRequestHandler<GetRemindersQuery, IEnum
         var reminders = await _reminderRepository.GetAllAsync();
         var userReminders = reminders.Where(r => r.UserId == request.UserId);
 
-        if (request.Status.HasValue)
+        if (request.IsActive.HasValue)
         {
-            userReminders = userReminders.Where(r => r.Status == request.Status.Value);
+            userReminders = userReminders.Where(r => r.IsActive == request.IsActive.Value);
         }
 
         return _mapper.Map<IEnumerable<ReminderDto>>(userReminders);

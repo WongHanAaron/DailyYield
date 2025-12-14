@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Text.Json;
 using DailyYield.Api.Controllers;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -64,9 +65,10 @@ public class UserGroupsControllerTests : IClassFixture<CustomWebApplicationFacto
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Created);
-        var result = (await response.Content.ReadFromJsonAsync<dynamic>())!;
+        var result = await response.Content.ReadFromJsonAsync<Dictionary<string, object>>();
         result.Should().NotBeNull();
-        ((Guid)result!.Id).Should().NotBeEmpty();
+        result.Should().ContainKey("id");
+        ((JsonElement)result!["id"]).GetGuid().Should().NotBeEmpty();
     }
 
     [Fact]
