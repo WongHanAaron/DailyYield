@@ -19,7 +19,7 @@ builder.Host.UseSerilog((context, config) =>
 // Add services to the container.
 builder.Services.AddDailyYieldServices(
     builder.Configuration,
-    builder.Environment.IsEnvironment("Testing") ? options => options.Provider = DatabaseProvider.InMemory : null
+    builder.Environment.IsEnvironment("Development") ? options => options.Provider = DatabaseProvider.InMemory : null
 );
 
 builder.Services.AddAutoMapper(typeof(DailyYield.Application.ApplicationServiceRegistration).Assembly,
