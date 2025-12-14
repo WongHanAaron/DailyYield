@@ -185,3 +185,12 @@ temp/
 .Trashes
 ehthumbs.db
 Thumbs.db
+.vs/*
+/.vs/*
+.dtbcache.v2
+*.vsidx
+.futdcache.v2
+/rest-api/.vs/ProjectEvaluation/*.bin
+/rest-api/.vs/DailyYield/v18/*.json
+/rest-api/.vs/DailyYield/v18/*.v2
+/rest-api/.vs/DailyYield/v18/*.suo
