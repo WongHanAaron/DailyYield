@@ -14,11 +14,14 @@ A comprehensive REST API for the DailyYield productivity tracking application, b
 
 ### Prerequisites
 
-- .NET 8.0 or later
+- .NET 10.0 or later
 - PostgreSQL database
 - Visual Studio 2022 or VS Code
+- Docker and Docker Compose (for containerized deployment)
 
 ### Installation
+
+#### Option 1: Local Development
 
 1. Clone the repository
 2. Navigate to the `rest-api` directory
@@ -36,9 +39,59 @@ A comprehensive REST API for the DailyYield productivity tracking application, b
    dotnet run
    ```
 
+#### Option 2: Docker Development
+
+1. Clone the repository
+2. Navigate to the `rest-api` directory
+3. Copy and configure environment variables:
+   ```bash
+   cp .env.example .env
+   # Edit .env with your configuration
+   ```
+4. Start the services:
+   ```bash
+   docker-compose up --build
+   ```
+5. Run database migrations in the container:
+   ```bash
+   docker-compose exec api dotnet ef database update
+   ```
+
+### Docker Commands
+
+- **Build and start services:**
+  ```bash
+  docker-compose up --build
+  ```
+
+- **Run in background:**
+  ```bash
+  docker-compose up -d --build
+  ```
+
+- **Stop services:**
+  ```bash
+  docker-compose down
+  ```
+
+- **View logs:**
+  ```bash
+  docker-compose logs -f api
+  ```
+
+- **Run database migrations:**
+  ```bash
+  docker-compose exec api dotnet ef database update
+  ```
+
+- **Run tests:**
+  ```bash
+  docker-compose exec api dotnet test
+  ```
+
 ### API Documentation
 
-The API documentation is available via Swagger UI at `https://localhost:5001/swagger` when running in development mode.
+The API documentation is available via Swagger UI at `http://localhost:8080/swagger` when running locally or in Docker.
 
 ## Authentication
 

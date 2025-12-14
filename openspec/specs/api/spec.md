@@ -67,3 +67,17 @@ The API SHALL provide read-only endpoints for YieldSummary.
 #### Scenario: Get daily summary
 - **WHEN** GET /api/summaries?date=2023-10-01
 - **THEN** returns aggregated data for the user's user group
+
+### Requirement: Containerization
+The API SHALL be containerized with Docker for consistent deployment and development environments.
+
+#### Scenario: Docker deployment
+- **WHEN** docker-compose up is run
+- **THEN** the API, PostgreSQL, and Redis services start
+- **AND** the API is accessible on port 8080
+- **AND** database migrations are applied automatically
+
+#### Scenario: Health monitoring
+- **WHEN** GET /health is called
+- **THEN** returns healthy status with timestamp
+- **AND** Docker health checks pass based on this endpoint
