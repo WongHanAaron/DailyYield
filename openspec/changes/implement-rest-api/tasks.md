@@ -19,6 +19,8 @@
 - [x] 2.13 Implement YieldSummary read controllers
 - [x] 2.14 Add input validation, error handling, and logging
 - [x] 2.15 Configure CORS and basic rate limiting
+- [ ] 2.16 Create Dockerfile with multi-stage build for ASP.NET Core
+- [ ] 2.17 Create docker-compose.yml for local development with Postgres and Redis
 
 ## 3. Validation
 - [x] 3.1 Write unit tests for command and query handlers
@@ -28,6 +30,8 @@
 - [x] 3.5 Test authentication and authorization flows
 - [x] 3.6 Validate API responses match spec scenarios
 - [x] 3.7 Ensure data isolation per user group
+- [ ] 3.8 Test Docker container build and run locally
+- [ ] 3.9 Validate docker-compose setup with database integration
 
 ## 4. Documentation
 - [x] 4.1 Generate Swagger/OpenAPI docs
